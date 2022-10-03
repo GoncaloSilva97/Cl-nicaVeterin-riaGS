@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using VeterinaryClinicGS.Data.Entities;
 using System.Threading.Tasks;
-using SuperShopGS.Models;
+using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Helperes
 {
@@ -27,8 +27,7 @@ namespace VeterinaryClinicGS.Helperes
 
 
 
-
-
+        Task<bool> DeletAsync(string email);
 
 
 

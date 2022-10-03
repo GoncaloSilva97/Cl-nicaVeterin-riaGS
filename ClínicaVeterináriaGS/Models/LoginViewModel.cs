@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SuperShopGS.Models
+namespace VeterinaryClinicGS.Models
 {
     public class LoginViewModel
     {

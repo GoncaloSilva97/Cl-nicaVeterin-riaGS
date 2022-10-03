@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using VeterinaryClinicGS.Data.Entities;
 using System.Threading.Tasks;
-using SuperShopGS.Models;
+using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Helperes
 {
@@ -36,10 +36,20 @@ namespace VeterinaryClinicGS.Helperes
 
 
 
+        
 
 
+        public async Task<bool> DeletAsync(string email)
+        {
+            var user = await GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return true;
+            }
 
-
+            var response = await _userManager.DeleteAsync(user);
+            return response.Succeeded;
+        }
 
 
 

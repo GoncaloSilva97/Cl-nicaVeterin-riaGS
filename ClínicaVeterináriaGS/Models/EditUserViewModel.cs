@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace VeterinaryClinicGS.Data.Entities
+namespace VeterinaryClinicGS.Models
 {
-    public class User : IdentityUser
+    public class EditUserViewModel
     {
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
-
+        public int Id { get; set; }
 
         [Display(Name = "Document")]
         [MaxLength(20, ErrorMessage = "The {0} field can not have more than {1} characters.")]
@@ -28,14 +24,8 @@ namespace VeterinaryClinicGS.Data.Entities
         [MaxLength(100, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         public string Address { get; set; }
 
-        
-
-        [Display(Name = "Full Name")]
-        public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
-
-        public string ImageFullPath => ImageId == Guid.Empty
-         ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"
-         : $"https://veterinaryclinicgs.blob.core.windows.net/foto/{ImageId}";
-
+        [Display(Name = "Phone Number")]
+        [MaxLength(50, ErrorMessage = "The {0} field can not have more than {1} characters.")]
+        public string PhoneNumber { get; set; }
     }
 }
