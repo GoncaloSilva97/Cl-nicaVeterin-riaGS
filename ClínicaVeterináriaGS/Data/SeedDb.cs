@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Helperes;
 using System;
 using System.Linq;
@@ -38,7 +38,9 @@ namespace VeterinaryClinicGS.Data
                     LastName = "Silva",
                     Email = "dalton.fury120@gmail.com",
                     UserName = "dalton.fury120@gmail.com",
-                    PhoneNumber = "123456789"
+                    PhoneNumber = "123456789",
+                    Address = "dalton.fury120@gmail.com_123456789",
+                    Document = "123456789",                   
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456");

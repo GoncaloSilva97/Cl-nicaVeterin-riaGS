@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 using System.Threading.Tasks;
 using VeterinaryClinicGS.Models;
 
@@ -25,6 +25,13 @@ namespace VeterinaryClinicGS.Helperes
         {
             return await _userManager.CreateAsync(user, password);
         }
+
+
+
+
+
+
+
 
         public async Task<IdentityResult> ChangePasswordAsync(
             User user,
@@ -63,6 +70,15 @@ namespace VeterinaryClinicGS.Helperes
         {
             return await _userManager.IsInRoleAsync(user, roleName);
         }
+
+
+
+
+        
+
+
+
+
         public async Task CheckRoleAsync(string roleName)
         {
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
@@ -111,6 +127,11 @@ namespace VeterinaryClinicGS.Helperes
         {
             await _signInManager.SignOutAsync();
         }
+
+
+
+
+
 
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {

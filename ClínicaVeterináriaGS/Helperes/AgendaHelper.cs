@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VeterinaryClinicGS.Data;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 
-namespace VeterinaryClinicGS.Helpers
+namespace VeterinaryClinicGS.Helperes
 {
     public class AgendaHelper : IAgendaHelper
     {

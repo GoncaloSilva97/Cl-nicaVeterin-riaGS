@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinicGS.Data;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Controllers
 {

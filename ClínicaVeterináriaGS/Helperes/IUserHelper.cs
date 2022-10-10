@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 using System.Threading.Tasks;
 using VeterinaryClinicGS.Models;
 

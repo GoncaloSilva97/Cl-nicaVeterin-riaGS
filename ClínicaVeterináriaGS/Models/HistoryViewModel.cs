@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ClínicaVeterináriaGS.Data.Entities;
+using ClínicaVeterináriaGS.Data.Entity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 

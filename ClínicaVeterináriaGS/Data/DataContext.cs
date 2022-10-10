@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using VeterinaryClinicGS.Data.Entities;
-using System.Linq;
 using VeterinaryClinicGS.Data.Entity;
-using ClínicaVeterináriaGS.Data.Entities;
+using System.Linq;
+using ClínicaVeterináriaGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Data
 {

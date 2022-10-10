@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "storage1": {
-      "type": "storage",
+    "mssql1": {
+      "type": "mssql",
       "connectionId": "ConnectionStrings:DefaultConnection",
       "dynamicId": null
     }

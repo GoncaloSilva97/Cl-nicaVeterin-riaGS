@@ -6,9 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VeterinaryClinicGS.Data;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Helperes;
-using VeterinaryClinicGS.Helpers;
+
+using System;
+using Microsoft.Extensions.Azure;
+using Azure.Storage.Queues;
+using Azure.Storage.Blobs;
+using Azure.Core.Extensions;
 
 namespace VeterinaryClinicGS
 {
@@ -48,18 +53,22 @@ namespace VeterinaryClinicGS
 
             services.AddScoped<IUserHelper, UserHelper>();
 
-            services.AddScoped<IBlobHelper, BlobHelper>();
+            services.AddScoped<IImageHelper, ImageHelper>();
 
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
+            services.AddScoped<IOwnerRepository, OwnerRepository>();
 
-            
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+            services.AddScoped<IAnimalsRepository, AnimalsRepository>();
+
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
          
             services.AddScoped<IAgendaHelper, AgendaHelper>();
 
-
+            services.AddScoped<IBlobHelper, BlobHelper>();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -68,7 +77,7 @@ namespace VeterinaryClinicGS
             });
 
             services.AddControllersWithViews();
-
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,11 +93,12 @@ namespace VeterinaryClinicGS
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -99,5 +109,6 @@ namespace VeterinaryClinicGS
             });
         }
     }
-    
+   
+
 }

@@ -1,29 +1,29 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using ClínicaVeterináriaGS.Data.Entities;
+using ClínicaVeterináriaGS.Data.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinicGS.Data;
 using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Helperes;
-using VeterinaryClinicGS.Helpers;
 using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AnimalsController : Controller
     {
         private readonly ICombosHelper _combosHelper;
         private readonly DataContext _dataContext;
-        private readonly BlobHelper _blobHelper;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IAnimalsRepository _animalsRepository;
 
         public AnimalsController(
             ICombosHelper combosHelper,
             DataContext dataContext,
-            BlobHelper blobHelper)
+            IBlobHelper blobHelper)
         {
             _combosHelper = combosHelper;
             _dataContext = dataContext;
@@ -93,7 +93,7 @@ namespace VeterinaryClinicGS.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Edit(AnimalViewModel model)
         {
             if (ModelState.IsValid)

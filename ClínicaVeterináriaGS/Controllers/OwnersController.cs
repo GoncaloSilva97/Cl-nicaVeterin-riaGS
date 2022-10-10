@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinicGS.Data;
-using VeterinaryClinicGS.Data.Entities;
 using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Helperes;
-using VeterinaryClinicGS.Helpers;
+
 using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
@@ -17,21 +16,24 @@ namespace VeterinaryClinicGS.Controllers
     [Authorize(Roles = "Admin")]
     public class OwnersController : Controller
     {
+        private readonly IOwnerRepository _ownerRepository;
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
-        private readonly BlobHelper _blobHelper;
+        private readonly IBlobHelper _blobHelper;
 
         public OwnersController(
+            IOwnerRepository ownerRepository,
             DataContext context,
             IUserHelper userHelper,
             ICombosHelper combosHelper,
             IConverterHelper converterHelper,
             IImageHelper imageHelper,
-            BlobHelper blobHelper)
+            IBlobHelper blobHelper)
         {
+            _ownerRepository = ownerRepository;
             _dataContext = context;
             _userHelper = userHelper;
             _combosHelper = combosHelper;
@@ -142,7 +144,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var model = new EditUserViewModel
+            var model = new ChangeUserViewModel
             {
                 Address = owner.User.Address,
                 Document = owner.User.Document,
@@ -157,7 +159,7 @@ namespace VeterinaryClinicGS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditUserViewModel model)
+        public async Task<IActionResult> Edit(ChangeUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -309,25 +311,25 @@ namespace VeterinaryClinicGS.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> DetailsPet(int? id)
+        public async Task<IActionResult> DetailsAnimal(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var pet = await _dataContext.Animals
+            var animal = await _dataContext.Animals
                 .Include(p => p.Owner)
                 .ThenInclude(o => o.User)
                 .Include(p => p.Histories)
                 .ThenInclude(h => h.ServiceType)
                 .FirstOrDefaultAsync(o => o.Id == id.Value);
-            if (pet == null)
+            if (animal == null)
             {
                 return NotFound();
             }
 
-            return View(pet);
+            return View(animal);
         }
 
         public async Task<IActionResult> AddHistory(int? id)
@@ -361,7 +363,7 @@ namespace VeterinaryClinicGS.Controllers
                 var history = await _converterHelper.ToHistoryAsync(model, true);
                 _dataContext.Histories.Add(history);
                 await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"{nameof(DetailsPet)}/{model.AnimalId}");
+                return RedirectToAction($"{nameof(DetailsAnimal)}/{model.AnimalId}");
             }
 
             model.ServiceTypes = _combosHelper.GetComboServiceTypes();
@@ -395,7 +397,7 @@ namespace VeterinaryClinicGS.Controllers
                 var history = await _converterHelper.ToHistoryAsync(model, false);
                 _dataContext.Histories.Update(history);
                 await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"{nameof(DetailsPet)}/{model.AnimalId}");
+                return RedirectToAction($"{nameof(DetailsAnimal)}/{model.AnimalId}");
             }
 
             model.ServiceTypes = _combosHelper.GetComboServiceTypes();
@@ -419,7 +421,7 @@ namespace VeterinaryClinicGS.Controllers
 
             _dataContext.Histories.Remove(history);
             await _dataContext.SaveChangesAsync();
-            return RedirectToAction($"{nameof(DetailsPet)}/{history.Animal.Id}");
+            return RedirectToAction($"{nameof(DetailsAnimal)}/{history.Animal.Id}");
         }
 
         public async Task<IActionResult> DeletePet(int? id)

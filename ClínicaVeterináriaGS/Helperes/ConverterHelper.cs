@@ -1,11 +1,10 @@
-﻿using VeterinaryClinicGS.Data.Entities;
+﻿using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Models;
 using System;
 using VeterinaryClinicGS.Data;
-using VeterinaryClinicGS.Helpers;
+
 using System.Threading.Tasks;
-using VeterinaryClinicGS.Data.Entity;
-using ClínicaVeterináriaGS.Data.Entities;
+using ClínicaVeterináriaGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Helperes
 {

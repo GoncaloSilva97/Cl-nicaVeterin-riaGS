@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace VeterinaryClinicGS.Helpers
+namespace VeterinaryClinicGS.Helperes
 {
     public interface IAgendaHelper
     {

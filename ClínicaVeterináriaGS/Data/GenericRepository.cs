@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using VeterinaryClinicGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Data
 {

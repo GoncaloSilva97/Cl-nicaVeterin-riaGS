@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using VeterinaryClinicGS.Data.Entity;
 
-namespace VeterinaryClinicGS.Data.Entities
+namespace VeterinaryClinicGS.Data.Entity
 {
     public class AnimalType
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using VeterinaryClinicGS.Data.Entities;
 using VeterinaryClinicGS.Data.Entity;
 
-namespace ClínicaVeterináriaGS.Data.Entities
+
+namespace ClínicaVeterináriaGS.Data.Entity
 {
     public class History
     {

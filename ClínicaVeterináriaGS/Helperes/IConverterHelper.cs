@@ -1,8 +1,7 @@
-﻿using VeterinaryClinicGS.Data.Entities;
+﻿using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Models;
 using System;
-using VeterinaryClinicGS.Data.Entity;
-using ClínicaVeterináriaGS.Data.Entities;
+using ClínicaVeterináriaGS.Data.Entity;
 using System.Threading.Tasks;
 
 namespace VeterinaryClinicGS.Helperes

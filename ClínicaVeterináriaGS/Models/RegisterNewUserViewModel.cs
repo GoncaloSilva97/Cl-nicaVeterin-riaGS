@@ -5,6 +5,11 @@ namespace VeterinaryClinicGS.Models
     public class RegisterNewUserViewModel
     {
         [Required]
+        [Display(Name = "Document")]        
+        public string Document { get; set; }
+
+
+        [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 

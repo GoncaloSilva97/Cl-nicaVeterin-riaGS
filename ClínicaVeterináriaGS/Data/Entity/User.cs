@@ -2,12 +2,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace VeterinaryClinicGS.Data.Entities
+namespace VeterinaryClinicGS.Data.Entity
 {
     public class User : IdentityUser
     {
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
+      
+
+        //[Display(Name = "Image")]
+        //public Guid ImageId { get; set; }
 
 
         [Display(Name = "Document")]
@@ -28,10 +30,17 @@ namespace VeterinaryClinicGS.Data.Entities
         [MaxLength(100, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         public string Address { get; set; }
 
-        
+
+
+        //[Display(Name = "Full Name")]
+        //public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
+
 
         [Display(Name = "Full Name")]
-        public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
+        public string FullName => $"{FirstName} {LastName}";
+
+        [Display(Name = "Image")]
+        public Guid ImageId { get; set; }
 
         public string ImageFullPath => ImageId == Guid.Empty
          ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"

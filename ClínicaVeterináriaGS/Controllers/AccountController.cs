@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using VeterinaryClinicGS.Data.Entities;
+using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Helperes;
 using VeterinaryClinicGS.Models;
 using System.Linq;
@@ -45,16 +45,8 @@ namespace VeterinaryClinicGS.Controllers
 
             this.ModelState.AddModelError(string.Empty, "Failed to Login");
             return View(model);
+            
         }
-
-
-
-
-
-
-
-
-
 
         public async Task<IActionResult> Logout()
         {
@@ -63,6 +55,19 @@ namespace VeterinaryClinicGS.Controllers
 
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,20 +86,12 @@ namespace VeterinaryClinicGS.Controllers
                 {
                     user = new User
                     {
+                        Document = model.Document,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Email = model.Username,
                         UserName = model.Username
                     };
-
-
-
-                    ///////////////////////////////////////////////////////////////////////
-                    /////////////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////////////////////
-                    ///(////////////////////////////////////////////////////////////////////////
-                    
-
 
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -103,6 +100,19 @@ namespace VeterinaryClinicGS.Controllers
                         ModelState.AddModelError(string.Empty, "The user couldn't be created.");
                         return View(model);
                     }
+
+                    await _userHelper.AddUserToRoleAsync(user, "Customer");
+                
+
+                    var isInRole = await _userHelper.IsUserInRoleAsync(user, "Customer");
+                    if (!isInRole)
+                    {
+                        await _userHelper.AddUserToRoleAsync(user, "Customer");
+                    }
+
+
+
+
 
                     var loginViewModel = new LoginViewModel
                     {
@@ -127,6 +137,22 @@ namespace VeterinaryClinicGS.Controllers
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public async Task<IActionResult> ChangeUser()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
@@ -134,14 +160,14 @@ namespace VeterinaryClinicGS.Controllers
             if (user != null)
             {
                 model.FirstName = user.FirstName;
-                model.LastName = user.LastName;
+                model.LastName = user.LastName;               
             }
 
             return View(model);
         }
 
 
-
+        
 
 
         [HttpPost]
@@ -152,8 +178,9 @@ namespace VeterinaryClinicGS.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
+                    model.FirstName = user.FirstName;
+                    model.LastName = user.LastName;
+                   
                     var response = await _userHelper.UpdateUserAsync(user);
                     if (response.Succeeded)
                     {

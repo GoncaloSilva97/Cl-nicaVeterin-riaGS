@@ -1,8 +1,8 @@
-﻿using ClínicaVeterináriaGS.Data.Entities;
+﻿using ClínicaVeterináriaGS.Data.Entity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace VeterinaryClinicGS.Data.Entities
+namespace VeterinaryClinicGS.Data.Entity
 {
     public class ServiceType
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VeterinaryClinicGS.Data;
 
-namespace VeterinaryClinicGS.Helpers
+namespace VeterinaryClinicGS.Helperes
 {
     public class CombosHelper : ICombosHelper
     {
@@ -56,7 +56,7 @@ namespace VeterinaryClinicGS.Helpers
         {
             var list = _dataContext.Owners.Select(p => new SelectListItem
             {
-                Text = p.User.FullNameWithDocument,
+                Text = p.User.FullName,
                 Value = p.Id.ToString()
             }).OrderBy(p => p.Text).ToList();
 

@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using VeterinaryClinicGS.Data;
-using VeterinaryClinicGS.Helpers;
+using VeterinaryClinicGS.Helperes;
+
 using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AgendaController : Controller
     {
         private readonly DataContext _dataContext;
@@ -35,7 +36,7 @@ namespace VeterinaryClinicGS.Controllers
                 .Include(a => a.Owner)
                 .ThenInclude(o => o.User)
                 .Include(a => a.Animal)
-                .Where(a => a.Date >= DateTime.Today.ToUniversalTime()));
+                .Where(a => a.Date >= DateTime.Today));
         }
 
         public async Task<IActionResult> AddDays()

@@ -2,7 +2,7 @@
 
 namespace VeterinaryClinicGS.Models
 {
-    public class AddUserViewModel : EditUserViewModel
+    public class AddUserViewModel : ChangeUserViewModel
     {
         [Display(Name = "Email")]
         [Required(ErrorMessage = "The field {0} is mandatory.")]
