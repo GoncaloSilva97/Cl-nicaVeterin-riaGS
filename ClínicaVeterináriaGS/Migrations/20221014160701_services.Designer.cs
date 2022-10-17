@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VeterinaryClinicGS.Data;
 
 namespace VeterinaryClinicGS.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221014160701_services")]
+    partial class services
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -325,9 +327,7 @@ namespace VeterinaryClinicGS.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Info")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -433,7 +433,7 @@ namespace VeterinaryClinicGS.Migrations
                         .HasForeignKey("AnimalId");
 
                     b.HasOne("VeterinaryClinicGS.Data.Entity.ServiceType", "ServiceType")
-                        .WithMany()
+                        .WithMany("Histories")
                         .HasForeignKey("ServiceTypeId");
 
                     b.Navigation("Animal");
@@ -566,6 +566,11 @@ namespace VeterinaryClinicGS.Migrations
                     b.Navigation("Agendas");
 
                     b.Navigation("Animal");
+                });
+
+            modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.ServiceType", b =>
+                {
+                    b.Navigation("Histories");
                 });
 #pragma warning restore 612, 618
         }

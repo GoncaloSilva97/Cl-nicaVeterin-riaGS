@@ -13,6 +13,13 @@ namespace VeterinaryClinicGS.Data.Entity
         [Required(ErrorMessage = "The field {0} is mandatory.")]
         public string Name { get; set; }
 
-        public ICollection<History> Histories { get; set; }
+
+
+        [Display(Name = "Information")]
+        [MaxLength(500, ErrorMessage = "The {0} field can not have more than {1} characters.")]
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        public string Info { get; set; }
+
+       
     }
 }
