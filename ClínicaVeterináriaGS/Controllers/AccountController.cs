@@ -156,7 +156,7 @@ namespace VeterinaryClinicGS.Controllers
         public async Task<IActionResult> ChangeUser()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-            var model = new ChangeUserViewModel();
+            var model = new AddUserViewModel();
             if (user != null)
             {
                 model.FirstName = user.FirstName;
@@ -171,7 +171,7 @@ namespace VeterinaryClinicGS.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
+        public async Task<IActionResult> ChangeUser(AddUserViewModel model)
         {
             if (ModelState.IsValid)
             {

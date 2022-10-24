@@ -26,7 +26,7 @@ namespace ClínicaVeterináriaGS.Data.Entity
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime DateLocal => Date.ToLocalTime();
 
-        public ServiceType ServiceType { get; set; }
+        public ServiceTypes ServiceType { get; set; }
 
         public Animals Animal { get; set; }
     }

@@ -5,7 +5,7 @@ using VeterinaryClinicGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Data.Entity
 {
-    public class Owners : IEntity
+    public class Owners 
     {
         public int Id { get; set; }
 
@@ -21,7 +21,6 @@ namespace VeterinaryClinicGS.Data.Entity
 
 
 
-
     }
-   
+
 }

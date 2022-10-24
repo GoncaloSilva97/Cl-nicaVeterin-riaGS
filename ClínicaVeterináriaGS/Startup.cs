@@ -57,9 +57,7 @@ namespace VeterinaryClinicGS
 
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
-            services.AddScoped<IOwnerRepository, OwnerRepository>();
-
-            services.AddScoped<IDoctorRepository, DoctorRepository>();
+            
 
             services.AddScoped<IAnimalsRepository, AnimalsRepository>();
 
@@ -77,7 +75,12 @@ namespace VeterinaryClinicGS
             });
 
             services.AddControllersWithViews();
-            
+            services.AddAzureClients(builder =>
+            {
+                builder.AddBlobServiceClient(Configuration["Blob:ConnectionString:blob"], preferMsi: true);
+                builder.AddQueueServiceClient(Configuration["Blob:ConnectionString:queue"], preferMsi: true);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +112,31 @@ namespace VeterinaryClinicGS
             });
         }
     }
-   
+    internal static class StartupExtensions
+    {
+        public static IAzureClientBuilder<BlobServiceClient, BlobClientOptions> AddBlobServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddBlobServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddBlobServiceClient(serviceUriOrConnectionString);
+            }
+        }
+        public static IAzureClientBuilder<QueueServiceClient, QueueClientOptions> AddQueueServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddQueueServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddQueueServiceClient(serviceUriOrConnectionString);
+            }
+        }
+    }
+
 
 }

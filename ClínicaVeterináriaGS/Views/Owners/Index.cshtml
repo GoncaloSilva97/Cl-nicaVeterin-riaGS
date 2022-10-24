@@ -18,9 +18,12 @@
                 <h3 class="panel-title">Owners</h3>
             </div>
             <div class="panel-body">
-                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                <table class="table table-hover  table-striped" id="MyTable">
                     <thead>
                         <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.User.ImageId)
+                            </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.User.Document)
                             </th>
@@ -40,15 +43,25 @@
                                 @Html.DisplayNameFor(model => model.User.PhoneNumber)
                             </th>
                             <th>
-                                # Pets
+                                Animals
                             </th>
-                            <th></th>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
+
+                                 <td>
+                                     @if (!string.IsNullOrEmpty(item.User.ImageFullPath))
+                                     {
+                                       <img src="@Url.Content(item.User.ImageFullPath)" alt="Image" style="width:200px;height:250px;max-width:100%;height:auto">
+                                     }
+                                 </td>
+
+
+
                                 <td>
                                     @Html.DisplayFor(modelItem => item.User.Document)
                                 </td>
@@ -71,9 +84,13 @@
                                     @Html.DisplayFor(modelItem => item.Animal.Count)
                                 </td>
                                 <td>
-                                    <a asp-action="Edit" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-pencil"></i> </a>
-                                    <a asp-action="Details" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-list"> </i> </a>
-                                    <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>  
+                                </td>
+                                <td>
+                                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> 
+                                </td>
+                                <td>
+                                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
                                 </td>
                             </tr>
                         }
@@ -84,26 +101,9 @@
     </div>
 </div>
 
-<partial name="_DeleteDialog" />
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#MyTable').DataTable();
-
-            // Delete item
-            var item_to_delete;
-
-            $('.deleteItem').click((e) => {
-                item_to_delete = e.currentTarget.dataset.id;
-            });
-
-            $("#btnYesDelete").click(function () {
-                window.location.href = '/Owners/Delete/' + item_to_delete;
-            });
-        });
-    </script>
+   
 }

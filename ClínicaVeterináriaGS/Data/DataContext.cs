@@ -23,7 +23,7 @@ namespace VeterinaryClinicGS.Data
 
         public DbSet<AnimalType> AnimalTypes { get; set; }
 
-        public DbSet<ServiceType> ServiceTypes { get; set; }
+        public DbSet<ServiceTypes> ServiceTypes { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
 

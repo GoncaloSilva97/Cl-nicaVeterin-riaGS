@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinicGS.Data;
 using VeterinaryClinicGS.Data.Entity;
+using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
 {
@@ -24,15 +26,6 @@ namespace VeterinaryClinicGS.Controllers
         {
             return View(await _context.ServiceTypes.ToListAsync());
         }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -54,6 +47,8 @@ namespace VeterinaryClinicGS.Controllers
             return View(serviceType);
         }
 
+
+
         // GET: ServiceTypes/Create
         public IActionResult Create()
         {
@@ -64,17 +59,18 @@ namespace VeterinaryClinicGS.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] ServiceType serviceType)
+   
+        public async Task<IActionResult> Create(ServiceTypesViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(serviceType);
+                _context.ServiceTypes.Add(model);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(serviceType);
+            return View(model);
         }
+
 
         // GET: ServiceTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -96,24 +92,19 @@ namespace VeterinaryClinicGS.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] ServiceType serviceType)
+    
+        public async Task<IActionResult> Edit(ServiceTypesViewModel model)
         {
-            if (id != serviceType.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(serviceType);
+                    _context.ServiceTypes.Update(model);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ServiceTypeExists(serviceType.Id))
+                    if (!ServiceTypeExists(model.Id))
                     {
                         return NotFound();
                     }
@@ -124,15 +115,8 @@ namespace VeterinaryClinicGS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(serviceType);
+            return View(model);
         }
-
-
-
-
-
-
-
 
 
 
@@ -151,14 +135,39 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            _context.ServiceTypes.Remove(serviceType);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+           
+            return View(serviceType);
         }
 
 
 
+        [HttpPost, ActionName("Delete")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var serviceType = await _context.ServiceTypes
+                .FirstOrDefaultAsync(m => m.Id == id);
+            try
+            {
+                _context.ServiceTypes.Remove(serviceType);
+                await _context.SaveChangesAsync();
 
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{serviceType.Name} provavelmente está a ser usado!!";
+                    ViewBag.ErrorMessage = $"{serviceType.Name} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
+                        $"Experimente primeiro apagar todas as encomendas que o estão a usar," +
+                        $"e torne novamente a apagá-lo";
+                }
+
+                return View("Error");
+            }
+        }
 
 
 

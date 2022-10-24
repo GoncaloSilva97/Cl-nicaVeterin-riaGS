@@ -16,8 +16,8 @@ namespace VeterinaryClinicGS.Controllers
     [Authorize(Roles = "Admin")]
     public class OwnersController : Controller
     {
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly DataContext _dataContext;
+  
+        private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
@@ -25,7 +25,7 @@ namespace VeterinaryClinicGS.Controllers
         private readonly IBlobHelper _blobHelper;
 
         public OwnersController(
-            IOwnerRepository ownerRepository,
+            
             DataContext context,
             IUserHelper userHelper,
             ICombosHelper combosHelper,
@@ -33,8 +33,8 @@ namespace VeterinaryClinicGS.Controllers
             IImageHelper imageHelper,
             IBlobHelper blobHelper)
         {
-            _ownerRepository = ownerRepository;
-            _dataContext = context;
+            
+            _context = context;
             _userHelper = userHelper;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
@@ -44,7 +44,7 @@ namespace VeterinaryClinicGS.Controllers
 
         public IActionResult Index()
         {
-            return View(_dataContext.Owners
+            return View(_context.Owners
                 .Include(o => o.User)
                 .Include(o => o.Animal));
         }
@@ -56,7 +56,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners
+            var owner = await _context.Owners
                 .Include(o => o.User)
                 .Include(o => o.Animal)
                 .ThenInclude(p => p.AnimalType)
@@ -77,20 +77,30 @@ namespace VeterinaryClinicGS.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddUserViewModel model)
         {
+           
+
             if (ModelState.IsValid)
             {
+                Guid imageId = Guid.Empty;
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "foto");
+                }
+
                 var user = new User
                 {
+                  
                     Address = model.Address,
                     Document = model.Document,
                     Email = model.Username,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     PhoneNumber = model.PhoneNumber,
-                    UserName = model.Username
+                    UserName = model.Username,
+                    ImageId = imageId
                 };
 
                 var response = await _userHelper.AddUserAsync(user, model.Password);
@@ -106,11 +116,11 @@ namespace VeterinaryClinicGS.Controllers
                         User = userInDB
                     };
 
-                    _dataContext.Owners.Add(owner);
+                    _context.Owners.Add(owner);
 
                     try
                     {
-                        await _dataContext.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
 
                        
 
@@ -136,7 +146,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners
+            var owner = await _context.Owners
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.Id == id.Value);
             if (owner == null)
@@ -144,26 +154,47 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var model = new ChangeUserViewModel
+
+            //Guid imageId = Guid.Empty;
+            //if (imagModel.ImageFile != null && imagModel.ImageFile.Length > 0)
+            //{
+
+            //    imageId = await _blobHelper.UploadBlobAsync(imagModel.ImageFile, "foto");
+            //}
+
+
+
+            var model = new EditUserViewModel
             {
                 Address = owner.User.Address,
                 Document = owner.User.Document,
                 FirstName = owner.User.FirstName,
                 Id = owner.Id,
                 LastName = owner.User.LastName,
-                PhoneNumber = owner.User.PhoneNumber
+                PhoneNumber = owner.User.PhoneNumber,
+                ImageId = owner.User.ImageId,
+                Email = owner.User.Email,
+           
             };
 
             return View(model);
         }
 
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ChangeUserViewModel model)
+     
+        public async Task<IActionResult> Edit(EditUserViewModel model)
         {
+            
             if (ModelState.IsValid)
             {
-                var owner = await _dataContext.Owners
+                Guid imageId = model.ImageId;
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "foto");
+                }
+
+                var owner = await _context.Owners
                     .Include(o => o.User)
                     .FirstOrDefaultAsync(o => o.Id == model.Id);
 
@@ -172,6 +203,7 @@ namespace VeterinaryClinicGS.Controllers
                 owner.User.LastName = model.LastName;
                 owner.User.Address = model.Address;
                 owner.User.PhoneNumber = model.PhoneNumber;
+                owner.User.ImageId = imageId; 
 
                 await _userHelper.UpdateUserAsync(owner.User);
                 return RedirectToAction(nameof(Index));
@@ -180,6 +212,8 @@ namespace VeterinaryClinicGS.Controllers
             return View(model);
         }
 
+
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -187,7 +221,8 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners
+
+            var owner = await _context.Owners
                 .Include(o => o.User)
                 .Include(o => o.Animal)
                 .FirstOrDefaultAsync(o => o.Id == id);
@@ -196,22 +231,84 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            if (owner.Animal.Count > 0)
+            //if (owner.Animal.Count > 0)
+            //{
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+           
+           
+            return View(owner);
+        }
+
+
+
+        [HttpPost, ActionName("Delete")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var owner = await _context.Owners
+                .FirstOrDefaultAsync(m => m.Id == id);
+            try
             {
-                //TODO: Message
+                _context.Owners.Remove(owner);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{owner.User.FullName} provavelmente está a ser usado!!";
+                    ViewBag.ErrorMessage = $"{owner.User.FullName} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
+                        $"Experimente primeiro apagar todas as encomendas que o estão a usar," +
+                        $"e torne novamente a apagá-lo";
+                }
 
-            await _userHelper.DeletAsync(owner.User.Email);
-            _dataContext.Owners.Remove(owner);
-            await _dataContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                return View("Error");
+            }
         }
+
 
         private bool OwnerExists(int id)
         {
-            return _dataContext.Owners.Any(e => e.Id == id);
+            return _context.Owners.Any(e => e.Id == id);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public async Task<IActionResult> AddAnimal(int? id)
         {
@@ -220,7 +317,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners.FindAsync(id.Value);
+            var owner = await _context.Owners.FindAsync(id.Value);
             if (owner == null)
             {
                 return NotFound();
@@ -256,14 +353,37 @@ namespace VeterinaryClinicGS.Controllers
                 //}
 
                 var Animal = await _converterHelper.ToAnimalAsync(model, imageId, true);
-                _dataContext.Animals.Add(Animal);
-                await _dataContext.SaveChangesAsync();
+                _context.Animals.Add(Animal);
+                await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
 
             model.AnimalTypes = _combosHelper.GetComboPetTypes();
             return View(model);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public async Task<IActionResult> EditAnimal(int? id)
         {
@@ -272,7 +392,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals
+            var animal = await _context.Animals
                 .Include(p => p.Owner)
                 .Include(p => p.AnimalType)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -302,8 +422,8 @@ namespace VeterinaryClinicGS.Controllers
                 //}
 
                 var animal = await _converterHelper.ToAnimalAsync(model, imageId, false);
-                _dataContext.Animals.Update(animal);
-                await _dataContext.SaveChangesAsync();
+                _context.Animals.Update(animal);
+                await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
 
@@ -318,7 +438,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals
+            var animal = await _context.Animals
                 .Include(p => p.Owner)
                 .ThenInclude(o => o.User)
                 .Include(p => p.Histories)
@@ -339,7 +459,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals.FindAsync(id.Value);
+            var animal = await _context.Animals.FindAsync(id.Value);
             if (animal == null)
             {
                 return NotFound();
@@ -361,8 +481,8 @@ namespace VeterinaryClinicGS.Controllers
             if (ModelState.IsValid)
             {
                 var history = await _converterHelper.ToHistoryAsync(model, true);
-                _dataContext.Histories.Add(history);
-                await _dataContext.SaveChangesAsync();
+                _context.Histories.Add(history);
+                await _context.SaveChangesAsync();
                 return RedirectToAction($"{nameof(DetailsAnimal)}/{model.AnimalId}");
             }
 
@@ -377,7 +497,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var history = await _dataContext.Histories
+            var history = await _context.Histories
                 .Include(h => h.Animal)
                 .Include(h => h.ServiceType)
                 .FirstOrDefaultAsync(p => p.Id == id.Value);
@@ -395,8 +515,8 @@ namespace VeterinaryClinicGS.Controllers
             if (ModelState.IsValid)
             {
                 var history = await _converterHelper.ToHistoryAsync(model, false);
-                _dataContext.Histories.Update(history);
-                await _dataContext.SaveChangesAsync();
+                _context.Histories.Update(history);
+                await _context.SaveChangesAsync();
                 return RedirectToAction($"{nameof(DetailsAnimal)}/{model.AnimalId}");
             }
 
@@ -411,7 +531,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var history = await _dataContext.Histories
+            var history = await _context.Histories
                 .Include(h => h.Animal)
                 .FirstOrDefaultAsync(h => h.Id == id.Value);
             if (history == null)
@@ -419,8 +539,8 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            _dataContext.Histories.Remove(history);
-            await _dataContext.SaveChangesAsync();
+            _context.Histories.Remove(history);
+            await _context.SaveChangesAsync();
             return RedirectToAction($"{nameof(DetailsAnimal)}/{history.Animal.Id}");
         }
 
@@ -431,7 +551,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals
+            var animal = await _context.Animals
                 .Include(p => p.Owner)
                 .Include(p => p.Histories)
                 .FirstOrDefaultAsync(p => p.Id == id.Value);
@@ -446,8 +566,8 @@ namespace VeterinaryClinicGS.Controllers
                 return RedirectToAction($"{nameof(Details)}/{animal.Owner.Id}");
             }
 
-            _dataContext.Animals.Remove(animal);
-            await _dataContext.SaveChangesAsync();
+            _context.Animals.Remove(animal);
+            await _context.SaveChangesAsync();
             return RedirectToAction($"{nameof(Details)}/{animal.Owner.Id}");
         }
     }

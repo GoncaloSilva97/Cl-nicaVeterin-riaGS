@@ -33,14 +33,14 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var petType = await _context.AnimalTypes
+            var animalType = await _context.AnimalTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (petType == null)
+            if (animalType == null)
             {
                 return NotFound();
             }
 
-            return View(petType);
+            return View(animalType);
         }
 
         // GET: PetTypes/Create

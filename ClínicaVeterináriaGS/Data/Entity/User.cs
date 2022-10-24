@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,11 +7,7 @@ namespace VeterinaryClinicGS.Data.Entity
 {
     public class User : IdentityUser
     {
-      
-
-        //[Display(Name = "Image")]
-        //public Guid ImageId { get; set; }
-
+     
 
         [Display(Name = "Document")]
         [MaxLength(20, ErrorMessage = "The {0} field can not have more than {1} characters.")]
@@ -32,12 +29,10 @@ namespace VeterinaryClinicGS.Data.Entity
 
 
 
-        //[Display(Name = "Full Name")]
-        //public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
-
-
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
+
+
 
         [Display(Name = "Image")]
         public Guid ImageId { get; set; }
@@ -45,6 +40,8 @@ namespace VeterinaryClinicGS.Data.Entity
         public string ImageFullPath => ImageId == Guid.Empty
          ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"
          : $"https://veterinaryclinicgs.blob.core.windows.net/foto/{ImageId}";
+
+
 
     }
 }
