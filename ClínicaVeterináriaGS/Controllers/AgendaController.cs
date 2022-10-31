@@ -20,8 +20,7 @@ namespace VeterinaryClinicGS.Controllers
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
-        private readonly IImageHelper _imageHelper;
-        private readonly IBlobHelper _blobHelper;
+        
         private readonly IOwnersRepository _ownersRepository;
         private readonly IAnimalsRepository _animalsRepository;
         private readonly IAgendaHelper _agendaHelper;
@@ -33,8 +32,7 @@ namespace VeterinaryClinicGS.Controllers
             IUserHelper userHelper,
             ICombosHelper combosHelper,
             IConverterHelper converterHelper,
-            IImageHelper imageHelper,
-            IBlobHelper blobHelper,
+           
             IOwnersRepository ownersRepository,
             IAgendaHelper agendaHelper,
             IAgendaRepository agendaRepository,
@@ -44,8 +42,7 @@ namespace VeterinaryClinicGS.Controllers
             _userHelper = userHelper;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
-            _imageHelper = imageHelper;
-            _blobHelper = blobHelper;
+           
             _ownersRepository = ownersRepository;
             _animalsRepository = animalsRepository;
             _agendaHelper = agendaHelper;
