@@ -1,5 +1,4 @@
 ﻿
-using ClínicaVeterináriaGS.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -48,7 +47,7 @@ namespace VeterinaryClinicGS.Data.Entity
 
         public Owners Owner { get; set; }
 
-        public ICollection<History> Histories { get; set; }
+       
 
         public ICollection<Agenda> Agendas { get; set; }
 

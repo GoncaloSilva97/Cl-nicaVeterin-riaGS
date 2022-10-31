@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinicGS.Data;
 using VeterinaryClinicGS.Data.Entity;
+using VeterinaryClinicGS.Helperes;
 using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
@@ -15,11 +16,47 @@ namespace VeterinaryClinicGS.Controllers
     public class ServiceTypesController : Controller
     {
         private readonly DataContext _context;
+        private readonly IUserHelper _userHelper;
+        private readonly ICombosHelper _combosHelper;
+        private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IOwnersRepository _ownersRepository;
+        private readonly IAnimalsRepository _animalsRepository;
+        private readonly IAgendaHelper _agendaHelper;
+        private readonly IAgendaRepository _agendaRepository;
+        private readonly IServiceTypesRepository _serviceTypesRepository;
 
-        public ServiceTypesController(DataContext context)
+        
+
+        public ServiceTypesController(
+             DataContext context,
+            IUserHelper userHelper,
+            ICombosHelper combosHelper,
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper,
+            IBlobHelper blobHelper,
+            IOwnersRepository ownersRepository,
+            IAgendaHelper agendaHelper,
+            IAgendaRepository agendaRepository,
+            IAnimalsRepository animalsRepository,
+            IServiceTypesRepository serviceTypesRepository)
         {
             _context = context;
+            _userHelper = userHelper;
+            _combosHelper = combosHelper;
+            _converterHelper = converterHelper;
+            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
+            _ownersRepository = ownersRepository;
+            _animalsRepository = animalsRepository;
+            _agendaHelper = agendaHelper;
+            _agendaRepository = agendaRepository;
+            _serviceTypesRepository = serviceTypesRepository;
         }
+
+
+
 
         // GET: ServiceTypes
         public async Task<IActionResult> Index()
@@ -37,8 +74,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var serviceType = await _context.ServiceTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var serviceType = await _serviceTypesRepository.GetByIdAsync(id.Value);
             if (serviceType == null)
             {
                 return NotFound();
@@ -64,8 +100,8 @@ namespace VeterinaryClinicGS.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.ServiceTypes.Add(model);
-                await _context.SaveChangesAsync();
+                await _serviceTypesRepository.CreateAsync(model);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -80,7 +116,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var serviceType = await _context.ServiceTypes.FindAsync(id);
+            var serviceType = await _serviceTypesRepository.GetByIdAsync(id.Value);
             if (serviceType == null)
             {
                 return NotFound();
@@ -99,8 +135,8 @@ namespace VeterinaryClinicGS.Controllers
             {
                 try
                 {
-                    _context.ServiceTypes.Update(model);
-                    await _context.SaveChangesAsync();
+                    await _serviceTypesRepository.UpdateAsync(model);
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -128,8 +164,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var serviceType = await _context.ServiceTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var serviceType = await _serviceTypesRepository.GetByIdAsync(id.Value);
             if (serviceType == null)
             {
                 return NotFound();
@@ -145,12 +180,11 @@ namespace VeterinaryClinicGS.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var serviceType = await _context.ServiceTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var serviceType = await _serviceTypesRepository.GetByIdAsync(id);
             try
             {
-                _context.ServiceTypes.Remove(serviceType);
-                await _context.SaveChangesAsync();
+                await _serviceTypesRepository.DeletAsync(serviceType);
+                //await _context.SaveChangesAsync();
 
 
                 return RedirectToAction(nameof(Index));

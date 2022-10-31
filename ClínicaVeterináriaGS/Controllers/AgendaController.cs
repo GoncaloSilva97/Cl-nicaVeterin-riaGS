@@ -17,26 +17,54 @@ namespace VeterinaryClinicGS.Controllers
     public class AgendaController : Controller
     {
         private readonly DataContext _dataContext;
-        private readonly IAgendaHelper _agendaHelper;
+        private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
+        private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IOwnersRepository _ownersRepository;
+        private readonly IAnimalsRepository _animalsRepository;
+        private readonly IAgendaHelper _agendaHelper;
+        private readonly IAgendaRepository _agendaRepository;
 
+      
         public AgendaController(
-            DataContext dataContext, 
+             DataContext context,
+            IUserHelper userHelper,
+            ICombosHelper combosHelper,
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper,
+            IBlobHelper blobHelper,
+            IOwnersRepository ownersRepository,
             IAgendaHelper agendaHelper,
-            ICombosHelper combosHelper)
+            IAgendaRepository agendaRepository,
+            IAnimalsRepository animalsRepository)
         {
-            _dataContext = dataContext;
-            _agendaHelper = agendaHelper;
+            _dataContext = context;
+            _userHelper = userHelper;
             _combosHelper = combosHelper;
+            _converterHelper = converterHelper;
+            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
+            _ownersRepository = ownersRepository;
+            _animalsRepository = animalsRepository;
+            _agendaHelper = agendaHelper;
+            _agendaRepository = agendaRepository;
         }
+        
 
         public IActionResult Index()
         {
             return View(_dataContext.Agendas
+                .Include(a => a.Doctor)
+                .ThenInclude(s => s.ServiceType)
+                .Include(s => s.Room)
                 .Include(a => a.Owner)
                 .ThenInclude(o => o.User)
                 .Include(a => a.Animal)
                 .Where(a => a.Date >= DateTime.Today));
+
+
         }
 
         public async Task<IActionResult> AddDays()
@@ -63,44 +91,51 @@ namespace VeterinaryClinicGS.Controllers
             {
                 Id = agenda.Id,
                 Owners = _combosHelper.GetComboOwners(),
-                Pets = _combosHelper.GetComboPets(0)
+                Animals = _combosHelper.GetComboAnimals(0),
+                Rooms = _combosHelper.GetComboRooms(),
+                Doctors = _combosHelper.GetComboDoctor(),
             };
 
             return View(model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Assing(AgendaViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var agenda = await _dataContext.Agendas.FindAsync(model.Id);
+                var agenda = await _agendaRepository.GetByIdAsync(model.Id);
                 if (agenda != null)
                 {
                     agenda.IsAvailable = false;
-                    agenda.Owner = await _dataContext.Owners.FindAsync(model.OwnerId);
-                    agenda.Animal = await _dataContext.Animals.FindAsync(model.AnimalId);
+                    agenda.Owner = await _ownersRepository.GetByIdAsync(model.OwnerId);
+                    agenda.Animal = await _animalsRepository.GetByIdAsync(model.AnimalId);
+                    //agenda.Room = await _roomsRepository.GetByIdAsync(model.RoomId);
+                    //agenda.Doctor = await _doctorsRepository.GetByIdAsync(model.DoctorId);
+
+
                     agenda.Remarks = model.Remarks;
-                    _dataContext.Agendas.Update(agenda);
-                    await _dataContext.SaveChangesAsync();
+                   await _agendaRepository.UpdateAsync(agenda);
+                    //await _dataContext.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
             }
 
             model.Owners = _combosHelper.GetComboOwners();
-            model.Pets = _combosHelper.GetComboPets(model.OwnerId);
-
+            model.Animals = _combosHelper.GetComboAnimals(model.OwnerId);
+            model.Rooms = _combosHelper.GetComboRooms();
+            model.Doctors = _combosHelper.GetComboDoctor();
             return View(model);
         }
 
-        public async Task<JsonResult> GetPetsAsync(int ownerId)
+        public async Task<JsonResult> GetAnimalsAsync(int ownerId)
         {
-            var pets = await _dataContext.Animals
+            var Animals = await _dataContext.Animals
                 .Where(p => p.Owner.Id == ownerId)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
-            return Json(pets);
+            return Json(Animals);
         }
 
         public async Task<IActionResult> Unassign(int? id)
@@ -113,6 +148,8 @@ namespace VeterinaryClinicGS.Controllers
             var agenda = await _dataContext.Agendas
                 .Include(a => a.Owner)
                 .Include(a => a.Animal)
+                .Include(a => a.Doctor)
+                .Include(a => a.Room)
                 .FirstOrDefaultAsync(o => o.Id == id.Value);
             if (agenda == null)
             {
@@ -122,10 +159,12 @@ namespace VeterinaryClinicGS.Controllers
             agenda.IsAvailable = true;
             agenda.Animal = null;
             agenda.Owner = null;
+            agenda.Doctor = null;
+            agenda.Room = null;
             agenda.Remarks = null;
 
-            _dataContext.Agendas.Update(agenda);
-            await _dataContext.SaveChangesAsync();
+            await _agendaRepository.UpdateAsync(agenda);
+            //await _dataContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

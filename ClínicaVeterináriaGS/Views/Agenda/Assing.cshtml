@@ -22,7 +22,7 @@
 
             <div class="form-group">
                 <label asp-for="AnimalId" class="control-label"></label>
-                <select asp-for="AnimalId" asp-items="Model.Pets" class="form-control"></select>
+                <select asp-for="AnimalId" asp-items="Model.Animals" class="form-control"></select>
                 <span asp-validation-for="AnimalId" class="text-danger"></span>
             </div>
 
@@ -44,3 +44,31 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+@*@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#OwnerId").change(function () {
+                $("#PetId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetPetsAsync")',
+                    dataType: 'json',
+                    data: { ownerId: $("#OwnerId").val() },
+                    success: function (pets) {
+                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $.each(pets, function (i, pet) {
+                            $("#PetId").append('<option value="'
+                                + pet.id + '">'
+                                + pet.name + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve pets.' + ex.statusText);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}*@

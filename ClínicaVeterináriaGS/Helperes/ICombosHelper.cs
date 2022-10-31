@@ -5,12 +5,16 @@ namespace VeterinaryClinicGS.Helperes
 {
     public interface ICombosHelper
     {
-        IEnumerable<SelectListItem> GetComboPetTypes();
+        IEnumerable<SelectListItem> GetComboAnimalTypes();
 
         IEnumerable<SelectListItem> GetComboServiceTypes();
 
         IEnumerable<SelectListItem> GetComboOwners();
 
-        IEnumerable<SelectListItem> GetComboPets(int ownerId);
+        IEnumerable<SelectListItem> GetComboAnimals(int ownerId);
+
+        IEnumerable<SelectListItem> GetComboRooms();
+
+        IEnumerable<SelectListItem> GetComboDoctor();
     }
 }

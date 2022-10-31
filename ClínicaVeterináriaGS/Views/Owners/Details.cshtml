@@ -80,7 +80,7 @@
 <hr />
 @if (Model.Animal.Count == 0)
 {
-    <h4>Not pets added yet.</h4>
+    <h4>No animal added yet.</h4>
 }
 else
 {
@@ -140,16 +140,14 @@ else
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BornLocal)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Histories.Count)
-                                    </td>
+                                   
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Remarks)
                                     </td>
-                                    <td>
-                                        <a asp-action="EditAnimal" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-pencil"></i> </a>
-                                        <a asp-action="DetailsAnimal" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-list"> </i> </a>
-                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                    <td> 
+                                        <a asp-action="EditAnimal" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+                                        <a asp-action="DetailsAnimal" class="btn btn-primary" asp-route-id="@item.Id">Animal Details<i class="glyphicon glyphicon-list"> </i> </a>
+                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete<i class="glyphicon glyphicon-trash"></i></button>
                                     </td>
                                 </tr>
                             }

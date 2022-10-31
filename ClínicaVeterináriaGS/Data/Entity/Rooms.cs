@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace VeterinaryClinicGS.Data.Entity
 {
@@ -7,9 +8,9 @@ namespace VeterinaryClinicGS.Data.Entity
         public int Id { get; set; }
 
 
-        [Display(Name = "Specialty")]
-        public string Specialty { get; set; }
-
         
+        public ServiceTypes ServiceType { get; set; }
+
+        public ICollection<Agenda> Agendas { get; set; }
     }
 }

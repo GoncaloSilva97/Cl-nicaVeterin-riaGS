@@ -58,8 +58,13 @@ namespace VeterinaryClinicGS
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
             
+            services.AddScoped<IOwnersRepository, OwnersRepository>();
 
             services.AddScoped<IAnimalsRepository, AnimalsRepository>();
+
+            services.AddScoped<IAgendaRepository, AgendaRepository>();
+
+            services.AddScoped <IAnimalTypesRepository, AnimalTypesRepository>();
 
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();

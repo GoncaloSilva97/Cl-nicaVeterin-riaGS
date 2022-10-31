@@ -7,17 +7,58 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VeterinaryClinicGS.Data;
 using VeterinaryClinicGS.Data.Entity;
+using VeterinaryClinicGS.Helperes;
+using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
 {
     public class AnimalTypesController : Controller
     {
         private readonly DataContext _context;
+        private readonly IUserHelper _userHelper;
+        private readonly ICombosHelper _combosHelper;
+        private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IOwnersRepository _ownersRepository;
+        private readonly IAnimalsRepository _animalsRepository;
+        private readonly IAgendaHelper _agendaHelper;
+        private readonly IAgendaRepository _agendaRepository;
+        private readonly IServiceTypesRepository _serviceTypesRepository;
+        private readonly IAnimalTypesRepository _animalTypesRepository;
 
-        public AnimalTypesController(DataContext context)
+     
+
+        public AnimalTypesController(
+             DataContext context,
+            IUserHelper userHelper,
+            ICombosHelper combosHelper,
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper,
+            IBlobHelper blobHelper,
+            IOwnersRepository ownersRepository,
+            IAgendaHelper agendaHelper,
+            IAgendaRepository agendaRepository,
+            IAnimalsRepository animalsRepository,
+            IServiceTypesRepository serviceTypesRepository,
+            IAnimalTypesRepository animalTypesRepository)
         {
             _context = context;
+            _userHelper = userHelper;
+            _combosHelper = combosHelper;
+            _converterHelper = converterHelper;
+            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
+            _ownersRepository = ownersRepository;
+            _animalsRepository = animalsRepository;
+            _agendaHelper = agendaHelper;
+            _agendaRepository = agendaRepository;
+            _serviceTypesRepository = serviceTypesRepository;
+            _animalTypesRepository = animalTypesRepository;
         }
+
+
+
 
         // GET: PetTypes
         public async Task<IActionResult> Index()
@@ -33,8 +74,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animalType = await _context.AnimalTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var animalType = await _animalTypesRepository.GetByIdAsync(id.Value);
             if (animalType == null)
             {
                 return NotFound();
@@ -53,16 +93,15 @@ namespace VeterinaryClinicGS.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] AnimalType animalType)
+        public async Task<IActionResult> Create(AddAnimalTypeViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(animalType);
-                await _context.SaveChangesAsync();
+                await _animalTypesRepository.CreateAsync(model);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(animalType);
+            return View(model);
         }
 
         // GET: PetTypes/Edit/5
@@ -73,7 +112,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animalType = await _context.AnimalTypes.FindAsync(id);
+            var animalType = await _animalTypesRepository.GetByIdAsync(id.Value);
             if (animalType == null)
             {
                 return NotFound();
@@ -84,11 +123,10 @@ namespace VeterinaryClinicGS.Controllers
         // POST: PetTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] AnimalType animalType)
+        [HttpPost] 
+        public async Task<IActionResult> Edit(int id, AddAnimalTypeViewModel model)
         {
-            if (id != animalType.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -97,12 +135,12 @@ namespace VeterinaryClinicGS.Controllers
             {
                 try
                 {
-                    _context.Update(animalType);
-                    await _context.SaveChangesAsync();
+                    await _animalTypesRepository.UpdateAsync(model);
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PetTypeExists(animalType.Id))
+                    if (!AnimalTypeExists(model.Id))
                     {
                         return NotFound();
                     }
@@ -113,7 +151,7 @@ namespace VeterinaryClinicGS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(animalType);
+            return View(model);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -133,16 +171,16 @@ namespace VeterinaryClinicGS.Controllers
 
             if(animalType.Animal.Count > 0)
             {
-                ModelState.AddModelError(string.Empty, "The pet type can't be removed.");
+                ModelState.AddModelError(string.Empty, "The animal type can't be removed.");
                 return RedirectToAction(nameof(Index));
             }
 
-            _context.AnimalTypes.Remove(animalType);
-            await _context.SaveChangesAsync();
+            await _animalTypesRepository.DeletAsync(animalType);
+            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PetTypeExists(int id)
+        private bool AnimalTypeExists(int id)
         {
             return _context.AnimalTypes.Any(e => e.Id == id);
         }

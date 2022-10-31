@@ -13,8 +13,7 @@ namespace VeterinaryClinicGS.Data.Entity
         public User User { get; set; }
 
 
-        [Display(Name = "Specialty")]
-        public string Specialty { get; set; }
+        public ServiceTypes ServiceType { get; set; }
 
         public ICollection<Agenda> Agendas { get; set; }
     }
