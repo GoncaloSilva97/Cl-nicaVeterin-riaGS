@@ -153,13 +153,48 @@ namespace VeterinaryClinicGS.Controllers
 
 
 
-        
+        public async Task<IActionResult> ChangeUser()
+        {
+            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            var model = new ChangeUserViewModel();
+            if (user != null)
+            {
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;               
+            }
+
+            return View(model);
+        }
 
 
         
 
 
-        
+        [HttpPost]
+        public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                if (user != null)
+                {
+                    model.FirstName = user.FirstName;
+                    model.LastName = user.LastName;
+                   
+                    var response = await _userHelper.UpdateUserAsync(user);
+                    if (response.Succeeded)
+                    {
+                        ViewBag.UserMessage = "User Updated!";
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                    }
+                }
+            }
+            
+            return View(model);
+        }
 
         public IActionResult ChangePassword()
         {
