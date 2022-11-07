@@ -10,8 +10,8 @@ using VeterinaryClinicGS.Data;
 namespace VeterinaryClinicGS.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221104134053_delan")]
-    partial class delan
+    [Migration("20221107183940_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -355,7 +355,10 @@ namespace VeterinaryClinicGS.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ServiceTypeId")
+                    b.Property<int>("RoomNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -561,7 +564,7 @@ namespace VeterinaryClinicGS.Migrations
             modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.Animals", b =>
                 {
                     b.HasOne("VeterinaryClinicGS.Data.Entity.AnimalType", "AnimalType")
-                        .WithMany()
+                        .WithMany("Animal")
                         .HasForeignKey("AnimalTypeId");
 
                     b.HasOne("VeterinaryClinicGS.Data.Entity.Owners", "Owner")
@@ -603,9 +606,16 @@ namespace VeterinaryClinicGS.Migrations
                 {
                     b.HasOne("VeterinaryClinicGS.Data.Entity.ServiceTypes", "ServiceType")
                         .WithMany()
-                        .HasForeignKey("ServiceTypeId");
+                        .HasForeignKey("ServiceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ServiceType");
+                });
+
+            modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.AnimalType", b =>
+                {
+                    b.Navigation("Animal");
                 });
 
             modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.Animals", b =>

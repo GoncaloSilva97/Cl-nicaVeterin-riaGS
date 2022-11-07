@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VeterinaryClinicGS.Migrations
 {
-    public partial class initDB : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -247,7 +247,8 @@ namespace VeterinaryClinicGS.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceTypeId = table.Column<int>(type: "int", nullable: true)
+                    RoomNumber = table.Column<int>(type: "int", nullable: false),
+                    ServiceTypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,7 +258,7 @@ namespace VeterinaryClinicGS.Migrations
                         column: x => x.ServiceTypeId,
                         principalTable: "ServiceTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
