@@ -10,8 +10,13 @@ using VeterinaryClinicGS.Data;
 namespace VeterinaryClinicGS.Migrations
 {
     [DbContext(typeof(DataContext))]
+<<<<<<<< HEAD:ClínicaVeterináriaGS/Migrations/20221107183940_init.Designer.cs
     [Migration("20221107183940_init")]
     partial class init
+========
+    [Migration("20221018001729_s1")]
+    partial class s1
+>>>>>>>> cba71afa104b163829328a9b4b3b681496ed69e2:ClínicaVeterináriaGS/Migrations/20221018001729_s1.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -348,13 +353,18 @@ namespace VeterinaryClinicGS.Migrations
                     b.ToTable("Owners");
                 });
 
+<<<<<<<< HEAD:ClínicaVeterináriaGS/Migrations/20221107183940_init.Designer.cs
             modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.Rooms", b =>
+========
+            modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.ServiceTypes", b =>
+>>>>>>>> cba71afa104b163829328a9b4b3b681496ed69e2:ClínicaVeterináriaGS/Migrations/20221018001729_s1.Designer.cs
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+<<<<<<<< HEAD:ClínicaVeterináriaGS/Migrations/20221107183940_init.Designer.cs
                     b.Property<int>("RoomNumber")
                         .HasColumnType("int");
 
@@ -375,6 +385,8 @@ namespace VeterinaryClinicGS.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+========
+>>>>>>>> cba71afa104b163829328a9b4b3b681496ed69e2:ClínicaVeterináriaGS/Migrations/20221018001729_s1.Designer.cs
                     b.Property<string>("Info")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -477,6 +489,24 @@ namespace VeterinaryClinicGS.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+<<<<<<<< HEAD:ClínicaVeterináriaGS/Migrations/20221107183940_init.Designer.cs
+========
+            modelBuilder.Entity("ClínicaVeterináriaGS.Data.Entity.History", b =>
+                {
+                    b.HasOne("VeterinaryClinicGS.Data.Entity.Animals", "Animal")
+                        .WithMany("Histories")
+                        .HasForeignKey("AnimalId");
+
+                    b.HasOne("VeterinaryClinicGS.Data.Entity.ServiceTypes", "ServiceType")
+                        .WithMany()
+                        .HasForeignKey("ServiceTypeId");
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("ServiceType");
+                });
+
+>>>>>>>> cba71afa104b163829328a9b4b3b681496ed69e2:ClínicaVeterináriaGS/Migrations/20221018001729_s1.Designer.cs
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -634,11 +664,14 @@ namespace VeterinaryClinicGS.Migrations
 
                     b.Navigation("Animal");
                 });
+<<<<<<<< HEAD:ClínicaVeterináriaGS/Migrations/20221107183940_init.Designer.cs
 
             modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.Rooms", b =>
                 {
                     b.Navigation("Agendas");
                 });
+========
+>>>>>>>> cba71afa104b163829328a9b4b3b681496ed69e2:ClínicaVeterináriaGS/Migrations/20221018001729_s1.Designer.cs
 #pragma warning restore 612, 618
         }
     }
