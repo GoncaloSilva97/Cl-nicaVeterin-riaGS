@@ -35,8 +35,10 @@
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Owners" asp-action="Index">Owners</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Agenda" asp-action="Index">Agenda</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Animals" asp-action="Index">Animals</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="AnimalsTypes" asp-action="Index">Species</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="AnimalTypes" asp-action="Index">Animal Type</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="ServiceTypes" asp-action="Index">Services</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Doctors" asp-action="Index">Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Rooms" asp-action="Index">Rooms</a></li>
                         }
 
                          @if (User.Identity.IsAuthenticated && User.IsInRole("Customer"))
@@ -62,7 +64,7 @@
                             @if (this.User.Identity.IsAuthenticated)
                             {
                                  <li class="nav-item">
-                                     <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>                        
+                                     <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangePassword">@this.User.Identity.Name</a>                        
                                  </li>
                                  <li class="nav-item">
                                       <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>

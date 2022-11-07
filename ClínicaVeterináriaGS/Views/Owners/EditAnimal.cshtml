@@ -6,17 +6,19 @@
 
 <h2>Edit</h2>
 
-<h4>Pet</h4>
+<h4>Animal</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditPet" enctype="multipart/form-data">
+        <form asp-action="EditAnimal" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="OwnerId" />
             <input type="hidden" asp-for="ImageId" />
+            <input type="hidden" asp-for="Born" />
 
-            <partial name="_Pet"/>
+
+            <partial name="_Animal"/>
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

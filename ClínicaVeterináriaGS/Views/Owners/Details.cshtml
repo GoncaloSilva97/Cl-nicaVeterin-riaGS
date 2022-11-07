@@ -6,65 +6,81 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 
-<h2>Owner</h2>
+<h2>Details</h2>
+
+<div>   
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.Document)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.User.Document)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.User.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.User.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.Email)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.User.Email)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.Address)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.User.Address)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.PhoneNumber)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.User.PhoneNumber)
+                </dd>
+                <dt>
+                    Animals
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Animal.Count)
+                </dd>
+            </dl>
+        </div>
+
+        <div class="col-md-4">              
+            <img src="@Url.Content(Model.User.ImageFullPath)" alt="Image" style="width:300px;height:450px;max-width:100%;height:auto">
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+
 
 <div>
-    <h4>Details</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User.Document)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.Document)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.User.FirstName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.FirstName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.User.LastName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.LastName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.User.Address)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.Address)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.User.PhoneNumber)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.PhoneNumber)
-        </dd>
-        <dt>
-            # Pets
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Animal.Count)
-        </dd>
-    </dl>
-</div>
-<div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-    <a asp-action="AddPet" asp-route-id="@Model.Id" class="btn btn-primary">Add Pet</a>
+    <a asp-action="AddAnimal" asp-route-id="@Model.Id" class="btn btn-primary">Add Animal</a>
     <a asp-action="Index" class="btn btn-success">Back to List</a>
 </div>
 <hr />
 @if (Model.Animal.Count == 0)
 {
-    <h4>Not pets added yet.</h4>
+    <h4>No animal added yet.</h4>
 }
 else
 {
@@ -72,7 +88,7 @@ else
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Pets</h3>
+                    <h3 class="panel-title">Animal</h3>
                 </div>
                 <div class="panel-body">
                     <table class="table table-hover table-responsive table-striped" id="MyTable">
@@ -93,9 +109,7 @@ else
                                 <th>
                                     @Html.DisplayNameFor(model => model.Animal.FirstOrDefault().BornLocal)
                                 </th>
-                                <th>
-                                    # Histories
-                                </th>
+                                
                                 <th>
                                     @Html.DisplayNameFor(model => model.Animal.FirstOrDefault().Remarks)
                                 </th>
@@ -124,16 +138,14 @@ else
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BornLocal)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Histories.Count)
-                                    </td>
+                                   
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Remarks)
                                     </td>
-                                    <td>
-                                        <a asp-action="EditPet" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-pencil"></i> </a>
-                                        <a asp-action="DetailsPet" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-list"> </i> </a>
-                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-trash"></i></button>
+                                    <td> 
+                                        <a asp-action="EditAnimal" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                                        <a asp-action="DetailsAnimal" class="btn btn-primary" asp-route-id="@item.Id">Animal Details<i class="glyphicon glyphicon-list"> </i> </a>
+                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete<i class="glyphicon glyphicon-trash"></i></button>
                                     </td>
                                 </tr>
                             }

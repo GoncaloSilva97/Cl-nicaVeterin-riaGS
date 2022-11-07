@@ -1,5 +1,4 @@
 ﻿
-using ClínicaVeterináriaGS.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -48,7 +47,7 @@ namespace VeterinaryClinicGS.Data.Entity
 
         public Owners Owner { get; set; }
 
-        public ICollection<History> Histories { get; set; }
+       
 
         public ICollection<Agenda> Agendas { get; set; }
 
@@ -68,7 +67,7 @@ namespace VeterinaryClinicGS.Data.Entity
 
 
         public string ImageFullPath => ImageId == Guid.Empty
-           ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"
-           : $"https://veterinaryclinicgs.blob.core.windows.net/foto/{ImageId}";
+           ? $"https://veterinaryclinicgsstorag.azurewebsites.net/foto/noimage.png"
+           : $"https://veterinaryclinicgsstorag.blob.core.windows.net/foto/{ImageId}";
     }
 }

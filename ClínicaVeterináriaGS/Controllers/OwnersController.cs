@@ -16,35 +16,43 @@ namespace VeterinaryClinicGS.Controllers
     [Authorize(Roles = "Admin")]
     public class OwnersController : Controller
     {
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly DataContext _dataContext;
+
+        private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
         private readonly IBlobHelper _blobHelper;
+        private readonly IOwnersRepository _ownersRepository;
+        private readonly IAnimalsRepository _animalsRepository;
+
+
 
         public OwnersController(
-            IOwnerRepository ownerRepository,
+
             DataContext context,
             IUserHelper userHelper,
             ICombosHelper combosHelper,
             IConverterHelper converterHelper,
             IImageHelper imageHelper,
-            IBlobHelper blobHelper)
+            IBlobHelper blobHelper,
+            IOwnersRepository ownersRepository,
+            IAnimalsRepository animalsRepository)
         {
-            _ownerRepository = ownerRepository;
-            _dataContext = context;
+
+            _context = context;
             _userHelper = userHelper;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _imageHelper = imageHelper;
             _blobHelper = blobHelper;
+            _ownersRepository = ownersRepository;
+            _animalsRepository = animalsRepository;
         }
 
         public IActionResult Index()
         {
-            return View(_dataContext.Owners
+            return View(_context.Owners
                 .Include(o => o.User)
                 .Include(o => o.Animal));
         }
@@ -56,12 +64,11 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners
+            var owner = await _context.Owners
                 .Include(o => o.User)
                 .Include(o => o.Animal)
                 .ThenInclude(p => p.AnimalType)
                 .Include(o => o.Animal)
-                .ThenInclude(p => p.Histories)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
@@ -77,20 +84,30 @@ namespace VeterinaryClinicGS.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddUserViewModel model)
+        public async Task<IActionResult> Create(OwnersViewModel model)
         {
+
+
             if (ModelState.IsValid)
             {
+                Guid imageId = Guid.Empty;
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "foto");
+                }
+
                 var user = new User
                 {
+
                     Address = model.Address,
                     Document = model.Document,
                     Email = model.Username,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     PhoneNumber = model.PhoneNumber,
-                    UserName = model.Username
+                    UserName = model.Username,
+                    ImageId = imageId
                 };
 
                 var response = await _userHelper.AddUserAsync(user, model.Password);
@@ -103,16 +120,24 @@ namespace VeterinaryClinicGS.Controllers
                     {
                         Agendas = new List<Agenda>(),
                         Animal = new List<Animals>(),
-                        User = userInDB
+                        User = userInDB,
+
+
+                        Address = model.Address,
+                        Document = model.Document,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        PhoneNumber = model.PhoneNumber,
+                        ImageId = imageId
                     };
 
-                    _dataContext.Owners.Add(owner);
+                    await _ownersRepository.CreateAsync(owner);
 
                     try
                     {
-                        await _dataContext.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
 
-                       
+
 
                         return RedirectToAction(nameof(Index));
                     }
@@ -128,7 +153,7 @@ namespace VeterinaryClinicGS.Controllers
 
             return View(model);
         }
-
+    
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -136,7 +161,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners
+            var owner = await _context.Owners
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.Id == id.Value);
             if (owner == null)
@@ -144,26 +169,37 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var model = new ChangeUserViewModel
+
+            var model = new EditOwnersViewModel
             {
                 Address = owner.User.Address,
                 Document = owner.User.Document,
                 FirstName = owner.User.FirstName,
                 Id = owner.Id,
                 LastName = owner.User.LastName,
-                PhoneNumber = owner.User.PhoneNumber
+                PhoneNumber = owner.User.PhoneNumber,
+                ImageId = owner.User.ImageId,
+               
+
             };
 
             return View(model);
         }
 
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ChangeUserViewModel model)
+        public async Task<IActionResult> Edit(EditOwnersViewModel model)
         {
+
             if (ModelState.IsValid)
             {
-                var owner = await _dataContext.Owners
+                Guid imageId = model.ImageId;
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "foto");
+                }
+
+                var owner = await _context.Owners
                     .Include(o => o.User)
                     .FirstOrDefaultAsync(o => o.Id == model.Id);
 
@@ -172,6 +208,7 @@ namespace VeterinaryClinicGS.Controllers
                 owner.User.LastName = model.LastName;
                 owner.User.Address = model.Address;
                 owner.User.PhoneNumber = model.PhoneNumber;
+                owner.User.ImageId = imageId;
 
                 await _userHelper.UpdateUserAsync(owner.User);
                 return RedirectToAction(nameof(Index));
@@ -180,6 +217,8 @@ namespace VeterinaryClinicGS.Controllers
             return View(model);
         }
 
+
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -187,7 +226,8 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners
+
+            var owner = await _context.Owners
                 .Include(o => o.User)
                 .Include(o => o.Animal)
                 .FirstOrDefaultAsync(o => o.Id == id);
@@ -196,22 +236,48 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            if (owner.Animal.Count > 0)
+            return View(owner);
+        }
+
+
+
+        [HttpPost, ActionName("Delete")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var owner = await _ownersRepository.GetByIdAsync(id);
+           
+            try
             {
-                //TODO: Message
+                await _ownersRepository.DeletAsync(owner);
+                //await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException ex)
+            {
 
-            await _userHelper.DeletAsync(owner.User.Email);
-            _dataContext.Owners.Remove(owner);
-            await _dataContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+
+
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{owner.FullName} provavelmente está a ser usado!!";
+                    ViewBag.ErrorMessage = $"{owner.FullName} não pode ser apagado pois ainda tem animais no sistema.</br></br>" +
+                        $"Experimente primeiro apagar todos os animais deste user," +
+                        $"e torne novamente a apagá-lo";
+                }
+
+                return View("Error");
+            }
         }
+
 
         private bool OwnerExists(int id)
         {
-            return _dataContext.Owners.Any(e => e.Id == id);
+            return _context.Owners.Any(e => e.Id == id);
         }
+
 
         public async Task<IActionResult> AddAnimal(int? id)
         {
@@ -220,7 +286,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var owner = await _dataContext.Owners.FindAsync(id.Value);
+            var owner = await _ownersRepository.GetByIdAsync(id.Value);
             if (owner == null)
             {
                 return NotFound();
@@ -230,7 +296,7 @@ namespace VeterinaryClinicGS.Controllers
             {
                 Born = DateTime.Today,
                 OwnerId = owner.Id,
-                AnimalTypes = _combosHelper.GetComboPetTypes()
+                AnimalTypes = _combosHelper.GetComboAnimalTypes()
             };
 
             return View(model);
@@ -248,22 +314,18 @@ namespace VeterinaryClinicGS.Controllers
                     imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "foto");
 
                 }
-                //var path = string.Empty;
-
-                //if (model.ImageFile != null)
-                //{
-                //    path = await _imageHelper.UploadImageAsync(model.ImageFile);
-                //}
 
                 var Animal = await _converterHelper.ToAnimalAsync(model, imageId, true);
-                _dataContext.Animals.Add(Animal);
-                await _dataContext.SaveChangesAsync();
+                await _animalsRepository.CreateAsync(Animal);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
 
-            model.AnimalTypes = _combosHelper.GetComboPetTypes();
+            model.AnimalTypes = _combosHelper.GetComboAnimalTypes();
             return View(model);
         }
+
+
 
         public async Task<IActionResult> EditAnimal(int? id)
         {
@@ -272,7 +334,7 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals
+            var animal = await _context.Animals
                 .Include(p => p.Owner)
                 .Include(p => p.AnimalType)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -296,20 +358,18 @@ namespace VeterinaryClinicGS.Controllers
 
                 }
 
-                //if (model.ImageFile != null)
-                //{
-                //    path = await _imageHelper.UploadImageAsync(model.ImageFile);
-                //}
+
 
                 var animal = await _converterHelper.ToAnimalAsync(model, imageId, false);
-                _dataContext.Animals.Update(animal);
-                await _dataContext.SaveChangesAsync();
+                await _animalsRepository.UpdateAsync(animal);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
 
-            model.AnimalTypes = _combosHelper.GetComboPetTypes();
+            model.AnimalTypes = _combosHelper.GetComboAnimalTypes();
             return View(model);
         }
+
 
         public async Task<IActionResult> DetailsAnimal(int? id)
         {
@@ -318,11 +378,9 @@ namespace VeterinaryClinicGS.Controllers
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals
+            var animal = await _context.Animals
                 .Include(p => p.Owner)
                 .ThenInclude(o => o.User)
-                .Include(p => p.Histories)
-                .ThenInclude(h => h.ServiceType)
                 .FirstOrDefaultAsync(o => o.Id == id.Value);
             if (animal == null)
             {
@@ -332,123 +390,74 @@ namespace VeterinaryClinicGS.Controllers
             return View(animal);
         }
 
-        public async Task<IActionResult> AddHistory(int? id)
+
+
+
+
+        public async Task<IActionResult> DeleteAnimal(int? id)
         {
+
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var animal = await _dataContext.Animals.FindAsync(id.Value);
-            if (animal == null)
-            {
-                return NotFound();
-            }
-
-            var model = new HistoryViewModel
-            {
-                Date = DateTime.Now,
-                AnimalId = animal.Id,
-                ServiceTypes = _combosHelper.GetComboServiceTypes(),
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddHistory(HistoryViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var history = await _converterHelper.ToHistoryAsync(model, true);
-                _dataContext.Histories.Add(history);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"{nameof(DetailsAnimal)}/{model.AnimalId}");
-            }
-
-            model.ServiceTypes = _combosHelper.GetComboServiceTypes();
-            return View(model);
-        }
-
-        public async Task<IActionResult> EditHistory(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var history = await _dataContext.Histories
-                .Include(h => h.Animal)
-                .Include(h => h.ServiceType)
-                .FirstOrDefaultAsync(p => p.Id == id.Value);
-            if (history == null)
-            {
-                return NotFound();
-            }
-
-            return View(_converterHelper.ToHistoryViewModel(history));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditHistory(HistoryViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var history = await _converterHelper.ToHistoryAsync(model, false);
-                _dataContext.Histories.Update(history);
-                await _dataContext.SaveChangesAsync();
-                return RedirectToAction($"{nameof(DetailsAnimal)}/{model.AnimalId}");
-            }
-
-            model.ServiceTypes = _combosHelper.GetComboServiceTypes();
-            return View(model);
-        }
-
-        public async Task<IActionResult> DeleteHistory(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var history = await _dataContext.Histories
-                .Include(h => h.Animal)
-                .FirstOrDefaultAsync(h => h.Id == id.Value);
-            if (history == null)
-            {
-                return NotFound();
-            }
-
-            _dataContext.Histories.Remove(history);
-            await _dataContext.SaveChangesAsync();
-            return RedirectToAction($"{nameof(DetailsAnimal)}/{history.Animal.Id}");
-        }
-
-        public async Task<IActionResult> DeletePet(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var animal = await _dataContext.Animals
+            var animal = await _context.Animals
                 .Include(p => p.Owner)
-                .Include(p => p.Histories)
                 .FirstOrDefaultAsync(p => p.Id == id.Value);
             if (animal == null)
             {
                 return NotFound();
             }
 
-            if(animal.Histories.Count > 0)
-            {
-                ModelState.AddModelError(string.Empty, "The pet can't be deleted because it has related records.");
-                return RedirectToAction($"{nameof(Details)}/{animal.Owner.Id}");
-            }
 
-            _dataContext.Animals.Remove(animal);
-            await _dataContext.SaveChangesAsync();
+
+            await _animalsRepository.DeletAsync(animal);
+            //await _context.SaveChangesAsync();
             return RedirectToAction($"{nameof(Details)}/{animal.Owner.Id}");
         }
     }
 }
+
+//////var owner = await _context.Owners
+//////    .Include(o => o.User)
+//////    .Include(o => o.Animal)
+//////    .FirstOrDefaultAsync(o => o.Id == id);
+
+
+//////try
+//////{
+//////    for (int i = 0; i <= owner.Animal.Count; i++)
+//////    {
+//////        var animal = await _context.Animals
+//////        .Include(p => p.Owner)
+//////        .ThenInclude(a => a.Animal)
+//////        .FirstOrDefaultAsync(a => a.Id == id);
+
+
+
+
+
+
+//////        //var animal = await _animalsRepository.GetByIdAsync(Id);
+//////        await _animalsRepository.DeletAsync(animal);
+//////    }
+
+
+
+//////                //foreach (Animals a in owner.Animal)
+//////                //{
+//////                //    var animal = await _context.Animals
+//////                //    .Include(p => p.Owner)
+//////                //    .FirstOrDefaultAsync(p => p.Id == id);
+//////                //    //var animal = await _animalsRepository.GetByIdAsync(a.Id);
+//////                //    await _animalsRepository.DeletAsync(animal);
+//////                //}
+
+
+////////while (owner.Animal != null)
+////////{
+////////    var animal = await _animalsRepository.GetByIdAsync(owner.Animal);
+////////    await _animalsRepository.DeletAsync(animal);
+////////}

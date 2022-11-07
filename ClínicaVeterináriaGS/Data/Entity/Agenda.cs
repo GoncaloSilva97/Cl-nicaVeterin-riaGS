@@ -4,7 +4,7 @@ using VeterinaryClinicGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Data.Entity
 {
-    public class Agenda
+    public class Agenda : IEntity
     {
         public int Id { get; set; }
 
@@ -26,5 +26,11 @@ namespace VeterinaryClinicGS.Data.Entity
         public Owners Owner { get; set; }
 
         public Animals Animal { get; set; }
+
+        public Doctors Doctor { get; set; }
+
+        public Rooms Room { get; set; }
+
+        public ServiceTypes ServiceTypes { get; set; }
     }
 }

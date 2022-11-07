@@ -16,11 +16,25 @@ namespace VeterinaryClinicGS.Models
         public IEnumerable<SelectListItem> Owners { get; set; }
 
         [Required(ErrorMessage = "The field {0} is mandatory.")]
-        [Display(Name = "Pet")]
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a pet.")]
+        [Display(Name = "Animal")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select an animal.")]
         public int AnimalId { get; set; }
 
-        public IEnumerable<SelectListItem> Pets { get; set; }
+        public IEnumerable<SelectListItem> Animals { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Display(Name = "Doctor")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a doctor.")]
+        public int DoctorId { get; set; }
+
+        public IEnumerable<SelectListItem> Doctors { get; set; }
+
+        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Display(Name = "Room")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a room.")]
+        public int RoomId { get; set; }
+
+        public IEnumerable<SelectListItem> Rooms { get; set; }
 
         public bool IsMine { get; set; }
 

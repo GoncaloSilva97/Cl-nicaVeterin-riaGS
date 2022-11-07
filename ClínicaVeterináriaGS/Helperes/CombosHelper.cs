@@ -14,7 +14,7 @@ namespace VeterinaryClinicGS.Helperes
             _dataContext = dataContext;
         }
 
-        public IEnumerable<SelectListItem> GetComboPetTypes()
+        public IEnumerable<SelectListItem> GetComboAnimalTypes()
         {
             var list = _dataContext.AnimalTypes.Select(pt => new SelectListItem
             {
@@ -26,7 +26,7 @@ namespace VeterinaryClinicGS.Helperes
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Select a pet type...]",
+                Text = "[Select a Animal type...]",
                 Value = "0"
             });
 
@@ -69,7 +69,7 @@ namespace VeterinaryClinicGS.Helperes
             return list;
         }
 
-        public IEnumerable<SelectListItem> GetComboPets(int ownerId)
+        public IEnumerable<SelectListItem> GetComboAnimals(int ownerId)
         {
             var list = _dataContext.Animals.Where(p => p.Owner.Id == ownerId).Select(p => new SelectListItem
             {
@@ -79,7 +79,58 @@ namespace VeterinaryClinicGS.Helperes
 
             list.Insert(0, new SelectListItem
             {
-                Text = "(Select a pet...)",
+                Text = "(Select an animal...)",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public IEnumerable<SelectListItem> GetComboRooms()
+        {
+            var list = _dataContext.Rooms.Select(r => new SelectListItem
+            {
+                Text = "Numero",
+                Value = r.Id.ToString()
+            }).OrderBy(r => r.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select an room...)",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboDoctor()
+        {
+            var list = _dataContext.Doctors.Select(d => new SelectListItem
+            {
+                Text = d.User.FullName,
+                Value = d.Id.ToString()
+            }).OrderBy(d => d.Text).ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "(Select an doctor...)",
                 Value = "0"
             });
 

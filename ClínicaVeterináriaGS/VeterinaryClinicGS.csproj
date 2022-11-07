@@ -5,6 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Properties\ServiceDependencies\VeterinaryClinicGS - Web Deploy\**" />
+    <Content Remove="Properties\ServiceDependencies\VeterinaryClinicGS - Web Deploy\**" />
+    <EmbeddedResource Remove="Properties\ServiceDependencies\VeterinaryClinicGS - Web Deploy\**" />
+    <None Remove="Properties\ServiceDependencies\VeterinaryClinicGS - Web Deploy\**" />
+    <_WebToolingArtifacts Remove="Properties\ServiceDependencies\VeterinaryClinicGS - Web Deploy\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Properties\launchSettings.json" />
+    <Content Include="Properties\serviceDependencies.json" />
+    <Content Include="Properties\serviceDependencies.VeterinaryClinicGS - Web Deploy.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\serviceDependencies.VeterinaryClinicGS - Web Deploy.json.user" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.1.0" />
     <PackageReference Include="Azure.Storage.Queues" Version="12.2.0" />
@@ -19,6 +37,11 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Properties\ServiceDependencies\" />
   </ItemGroup>
 
 </Project>

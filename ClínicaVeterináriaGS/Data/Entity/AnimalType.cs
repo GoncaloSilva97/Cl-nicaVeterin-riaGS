@@ -4,7 +4,7 @@ using VeterinaryClinicGS.Data.Entity;
 
 namespace VeterinaryClinicGS.Data.Entity
 {
-    public class AnimalType
+    public class AnimalType : IEntity
     {
         public int Id { get; set; }
 

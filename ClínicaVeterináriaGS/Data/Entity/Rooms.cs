@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace VeterinaryClinicGS.Data.Entity
 {
@@ -7,9 +8,16 @@ namespace VeterinaryClinicGS.Data.Entity
         public int Id { get; set; }
 
 
-        [Display(Name = "Specialty")]
-        public string Specialty { get; set; }
+        public int RoomNumber { get; set; }
+        public ServiceTypes ServiceType { get; set; }
 
-        
+        public ICollection<Agenda> Agendas { get; set; }
+
+        [Required]
+        [Display(Name = "Service Type")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a Service Type.")]
+        public int ServiceTypeId { get; set; }
     }
 }
+//RoomsController
+//RoomsViewModel
