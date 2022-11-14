@@ -14,17 +14,60 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
+
+             
+
+            @if (this.User.IsInRole ("Worker"))
+            {
+               <div class="form-group">
+                    <label asp-for="OwnerId" class="control-label"></label>
+                    <select asp-for="OwnerId" asp-items="Model.Owners" class="form-control"></select>
+                    <span asp-validation-for="OwnerId" class="text-danger"></span>
+               </div>
+            }
+            else
+            {
+               
+                <td>
+                    <label asp-for="OwnerId" class="control-label"></label>
+                    
+
+                     @Html.DisplayFor(model => model.Owner.FullName)
+                </td>           
+            }
+
+
             <div class="form-group">
-                <label asp-for="OwnerId" class="control-label"></label>
-                <select asp-for="OwnerId" asp-items="Model.Owners" class="form-control"></select>
-                <span asp-validation-for="OwnerId" class="text-danger"></span>
+                <label asp-for="ServiceTypeId" class="control-label"></label>
+                <select asp-for="ServiceTypeId" asp-items="Model.ListServiceTypes" class="form-control"></select>
+                <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
             </div>
+                  
+
+           
 
             <div class="form-group">
                 <label asp-for="AnimalId" class="control-label"></label>
                 <select asp-for="AnimalId" asp-items="Model.Animals" class="form-control"></select>
                 <span asp-validation-for="AnimalId" class="text-danger"></span>
             </div>
+
+
+            <div class="form-group">
+                <label asp-for="RoomId" class="control-label"></label>
+                <select asp-for="RoomId" asp-items="Model.Rooms" class="form-control"></select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DoctorId" class="control-label"></label>
+                <select asp-for="DoctorId" asp-items="Model.Doctors" class="form-control"></select>
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+
+
+
+
 
             <div class="form-group">
                 <label asp-for="Remarks" class="control-label"></label>
@@ -43,32 +86,29 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-@*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
         $(document).ready(function () {
             $("#OwnerId").change(function () {
-                $("#PetId").empty();
+                $("#AnimalId").empty();
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("GetPetsAsync")',
+                    url: '@Url.Action("GetAnimalsAsync")',
                     dataType: 'json',
                     data: { ownerId: $("#OwnerId").val() },
                     success: function (pets) {
-                        $("#PetId").append('<option value="0">(Select a pet...)</option>');
+                        $("#AnimalId").append('<option value="0">(Select a animal...)</option>');
                         $.each(pets, function (i, pet) {
-                            $("#PetId").append('<option value="'
+                            $("#AnimalId").append('<option value="'
                                 + pet.id + '">'
                                 + pet.name + '</option>');
                         });
                     },
                     error: function (ex) {
-                        alert('Failed to retrieve pets.' + ex.statusText);
+                        alert('Failed to retrieve animals.' + ex.statusText);
                     }
                 });
                 return false;
             })
         });
     </script>
-}*@
+}

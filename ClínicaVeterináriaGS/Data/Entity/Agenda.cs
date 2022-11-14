@@ -1,6 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.ComponentModel.DataAnnotations;
-using VeterinaryClinicGS.Data.Entity;
+
 
 namespace VeterinaryClinicGS.Data.Entity
 {
@@ -31,6 +32,6 @@ namespace VeterinaryClinicGS.Data.Entity
 
         public Rooms Room { get; set; }
 
-        public ServiceTypes ServiceTypes { get; set; }
+        public ServiceTypes ServiceType { get; set; }
     }
 }

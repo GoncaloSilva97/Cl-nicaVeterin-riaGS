@@ -76,7 +76,7 @@ namespace VeterinaryClinicGS
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
          
-            services.AddScoped<IAgendaHelper, AgendaHelper>();
+            
 
             services.AddScoped<IBlobHelper, BlobHelper>();
 

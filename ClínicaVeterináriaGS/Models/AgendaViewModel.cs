@@ -36,6 +36,18 @@ namespace VeterinaryClinicGS.Models
 
         public IEnumerable<SelectListItem> Rooms { get; set; }
 
+        [Required]
+        [Display(Name = "Service Type")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a Service Type.")]
+        public int ServiceTypeId { get; set; }
+
+        public IEnumerable<SelectListItem> ListServiceTypes { get; set; }
+
+
+
+
+
+
         public bool IsMine { get; set; }
 
         public string Reserved => "Reserved";

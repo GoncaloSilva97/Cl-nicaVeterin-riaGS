@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<VeterinaryClinicGS.Data.Entity.Agenda>
 
-@{
+    @{
     ViewData["Title"] = "Index";
 }
 
@@ -8,7 +8,7 @@
 <br />
 
 <p>
-    <a asp-action="AddDays" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Add Days</a>
+    <a asp-action="AddDays" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Add Days</a>
 </p>
 
 <div class="row">
@@ -61,11 +61,11 @@
                                 <td>
                                     @if (item.IsAvailable)
                                     {
-                                        <a asp-action="Assing" class="btn btn-default" asp-route-id="@item.Id"><i class="glyphicon glyphicon-plus"></i></a>
+                                        <a asp-action="Assing" class="btn btn-info" asp-route-id="@item.Id">Assign<i class="glyphicon glyphicon-plus"></i></a>
                                     }
                                     else
                                     {
-                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog"><i class="glyphicon glyphicon-minus"></i></button>
+                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Cancel<i class="glyphicon glyphicon-minus"></i></button>
                                     }
                                 </td>
                             </tr>
@@ -77,7 +77,7 @@
     </div>
 </div>
 
-
+<!--U-assign agenda-->
 <div class="modal fade" id="deleteDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -88,11 +88,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Are you sure to un-assign this appoiment?</p>
+                <p>Are you sure to unassign this appoiment?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="btnYesDelete">Un-Assign</button>
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Unassign</button>
             </div>
         </div>
     </div>
@@ -100,7 +100,9 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
- <script type="text/javascript">
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
         $(document).ready(function () {
             $('#MyTable').DataTable();
 
@@ -117,3 +119,4 @@
         });
     </script>
 }
+

@@ -58,7 +58,7 @@ namespace VeterinaryClinicGS.Helperes
             {
                 Text = p.User.FullName,
                 Value = p.Id.ToString()
-            }).OrderBy(p => p.Text).ToList();
+            }).OrderBy(p => p.Value).ToList();
 
             list.Insert(0, new SelectListItem
             {
@@ -113,7 +113,7 @@ namespace VeterinaryClinicGS.Helperes
 
             list.Insert(0, new SelectListItem
             {
-                Text = "(Select an room...)",
+                Text = "(Select a room...)",
                 Value = "0"
             });
 
@@ -126,11 +126,11 @@ namespace VeterinaryClinicGS.Helperes
             {
                 Text = d.User.FullName,
                 Value = d.Id.ToString()
-            }).OrderBy(d => d.Text).ToList();
+            }).OrderBy(d => d.Value).ToList();
 
             list.Insert(0, new SelectListItem
             {
-                Text = "(Select an doctor...)",
+                Text = "(Select a doctor...)",
                 Value = "0"
             });
 

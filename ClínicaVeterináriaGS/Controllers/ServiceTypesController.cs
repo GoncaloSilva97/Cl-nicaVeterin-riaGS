@@ -23,7 +23,7 @@ namespace VeterinaryClinicGS.Controllers
         private readonly IBlobHelper _blobHelper;
         private readonly IOwnersRepository _ownersRepository;
         private readonly IAnimalsRepository _animalsRepository;
-        private readonly IAgendaHelper _agendaHelper;
+       
         private readonly IAgendaRepository _agendaRepository;
         private readonly IServiceTypesRepository _serviceTypesRepository;
 
@@ -37,7 +37,7 @@ namespace VeterinaryClinicGS.Controllers
             IImageHelper imageHelper,
             IBlobHelper blobHelper,
             IOwnersRepository ownersRepository,
-            IAgendaHelper agendaHelper,
+         
             IAgendaRepository agendaRepository,
             IAnimalsRepository animalsRepository,
             IServiceTypesRepository serviceTypesRepository)
@@ -50,7 +50,7 @@ namespace VeterinaryClinicGS.Controllers
             _blobHelper = blobHelper;
             _ownersRepository = ownersRepository;
             _animalsRepository = animalsRepository;
-            _agendaHelper = agendaHelper;
+         
             _agendaRepository = agendaRepository;
             _serviceTypesRepository = serviceTypesRepository;
         }
