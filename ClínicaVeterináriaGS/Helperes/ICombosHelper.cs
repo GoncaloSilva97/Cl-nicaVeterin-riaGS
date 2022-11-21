@@ -13,8 +13,8 @@ namespace VeterinaryClinicGS.Helperes
 
         IEnumerable<SelectListItem> GetComboAnimals(int ownerId);
 
-        IEnumerable<SelectListItem> GetComboRooms();
+        IEnumerable<SelectListItem> GetComboRooms(int roomId);
 
-        IEnumerable<SelectListItem> GetComboDoctor();
+        IEnumerable<SelectListItem> GetComboDoctor(int doctorId);
     }
 }

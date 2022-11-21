@@ -64,22 +64,11 @@ namespace VeterinaryClinicGS.Controllers
                 .Include(a => a.Animal)
                 .Where(a => a.Date >= DateTime.Today));
 
-
-
-
-
-
-
-            //return View(_dataContext.Agendas
-            //    .Include(a => a.Owner)
-            //    .ThenInclude(o => o.User)
-            //    .Include(a => a.Pet)
-            //    .Where(a => a.Date >= DateTime.Today.ToUniversalTime()));
         }
 
         public async Task<IActionResult> AddDays()
         {
-            await _agendaRepository.AddDaysAsync(7);
+            await _agendaRepository.AddDaysAsync(5);
             return RedirectToAction(nameof(Index));
         }
 
@@ -102,11 +91,11 @@ namespace VeterinaryClinicGS.Controllers
                 Id = agenda.Id,
                
                 Animals = _combosHelper.GetComboAnimals(0),
-                Rooms = _combosHelper.GetComboRooms(),
+                Rooms = _combosHelper.GetComboRooms(0),
             
-                ListServiceTypes = _combosHelper.GetComboAnimalTypes(),
+                ListServiceTypes = _combosHelper.GetComboServiceTypes(),
 
-                Doctors = _combosHelper.GetComboDoctor(),
+                Doctors = _combosHelper.GetComboDoctor(0),
                 Owners = _combosHelper.GetComboOwners(),
                 
             };
@@ -126,6 +115,14 @@ namespace VeterinaryClinicGS.Controllers
                     agenda.IsAvailable = false;
                     agenda.Owner = await _dataContext.Owners.FindAsync(model.OwnerId);
                     agenda.Animal = await _dataContext.Animals.FindAsync(model.AnimalId);
+
+
+                    agenda.Doctor = await _dataContext.Doctors.FindAsync(model.DoctorId);
+                    agenda.Room = await _dataContext.Rooms.FindAsync(model.RoomId);
+                    agenda.ServiceType = await _dataContext.ServiceTypes.FindAsync(model.ServiceTypeId);
+                  
+
+
                     agenda.Remarks = model.Remarks;
                     _dataContext.Agendas.Update(agenda);
                     await _dataContext.SaveChangesAsync();
@@ -136,17 +133,48 @@ namespace VeterinaryClinicGS.Controllers
             model.Owners = _combosHelper.GetComboOwners();
             model.Animals = _combosHelper.GetComboAnimals(model.OwnerId);
 
+            model.Rooms = _combosHelper.GetComboRooms(model.RoomId);
+            model.ListServiceTypes = _combosHelper.GetComboServiceTypes();
+            model.Doctors = _combosHelper.GetComboDoctor(model.DoctorId);
+                
             return View(model);
         }
 
-        public async Task<JsonResult> GetAnimalsAsync(int ownerId)
+        public async Task<JsonResult> GetAnimals(int ownerId)
         {
-            var pets = await _dataContext.Animals
+            var animals = await _dataContext.Animals
                 .Where(p => p.Owner.Id == ownerId)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
-            return Json(pets);
+            return Json(animals);
         }
+
+        public async Task<JsonResult> GetDoctors(int serviceTypeId)
+        {
+            var doctors = await _dataContext.Doctors
+                .Where(d => d.ServiceType.Id == serviceTypeId)
+                .OrderBy(d => d.FirstName)
+                .ToListAsync();
+            return Json(doctors);
+        }
+
+
+        public async Task<JsonResult> GetRooms(int serviceTypeId)
+        {
+            var rooms = await _dataContext.Rooms
+                .Where(r => r.ServiceType.Id == serviceTypeId)
+                .OrderBy(r => r.RoomNumber)
+                .ToListAsync();
+            return Json(rooms);
+        }
+
+
+
+
+
+
+
+
 
         public async Task<IActionResult> Unassign(int? id)
         {
@@ -158,6 +186,11 @@ namespace VeterinaryClinicGS.Controllers
             var agenda = await _dataContext.Agendas
                 .Include(a => a.Owner)
                 .Include(a => a.Animal)
+
+                .Include(a => a.Doctor)
+                .Include(a => a.Room)
+                .Include(a => a.ServiceType)
+
                 .FirstOrDefaultAsync(o => o.Id == id.Value);
             if (agenda == null)
             {
@@ -167,6 +200,12 @@ namespace VeterinaryClinicGS.Controllers
             agenda.IsAvailable = true;
             agenda.Animal = null;
             agenda.Owner = null;
+
+            agenda.Doctor = null;
+            agenda.Room = null;
+            agenda.ServiceType = null;
+
+
             agenda.Remarks = null;
 
             _dataContext.Agendas.Update(agenda);

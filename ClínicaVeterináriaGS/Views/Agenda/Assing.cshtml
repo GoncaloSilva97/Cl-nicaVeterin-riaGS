@@ -6,14 +6,15 @@
 
 <h2>Assign</h2>
 
-<h4>Agenda</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Assing" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-
+            @*<input type="hidden" asp-for="OwnerId" />*@
+          
 
              
 
@@ -25,16 +26,15 @@
                     <span asp-validation-for="OwnerId" class="text-danger"></span>
                </div>
             }
-            else
-            {
-               
-                <td>
-                    <label asp-for="OwnerId" class="control-label"></label>
-                    
+            
+             <div class="form-group">
+                <label asp-for="AnimalId" class="control-label"></label>
+                <select asp-for="AnimalId" asp-items="Model.Animals" class="form-control"></select>
+                <span asp-validation-for="AnimalId" class="text-danger"></span>
+            </div>
 
-                     @Html.DisplayFor(model => model.Owner.FullName)
-                </td>           
-            }
+
+
 
 
             <div class="form-group">
@@ -42,17 +42,7 @@
                 <select asp-for="ServiceTypeId" asp-items="Model.ListServiceTypes" class="form-control"></select>
                 <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
             </div>
-                  
-
-           
-
-            <div class="form-group">
-                <label asp-for="AnimalId" class="control-label"></label>
-                <select asp-for="AnimalId" asp-items="Model.Animals" class="form-control"></select>
-                <span asp-validation-for="AnimalId" class="text-danger"></span>
-            </div>
-
-
+               
             <div class="form-group">
                 <label asp-for="RoomId" class="control-label"></label>
                 <select asp-for="RoomId" asp-items="Model.Rooms" class="form-control"></select>
@@ -64,6 +54,8 @@
                 <select asp-for="DoctorId" asp-items="Model.Doctors" class="form-control"></select>
                 <span asp-validation-for="DoctorId" class="text-danger"></span>
             </div>
+
+
 
 
 
@@ -84,6 +76,7 @@
 </div>
 
 
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
@@ -92,23 +85,105 @@
                 $("#AnimalId").empty();
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("GetAnimalsAsync")',
+                    url: '@Url.Action("GetAnimals")',
                     dataType: 'json',
-                    data: { ownerId: $("#OwnerId").val() },
-                    success: function (pets) {
-                        $("#AnimalId").append('<option value="0">(Select a animal...)</option>');
-                        $.each(pets, function (i, pet) {
+                    data: {ownerId: $("#OwnerId").val()},
+                    success: function (animals) {
+                        debugger;
+                        $("#AnimalId").append('<option value="0">(Select an animal...)</option>');
+                        $.each(animals, function (i, animal) {
                             $("#AnimalId").append('<option value="'
-                                + pet.id + '">'
-                                + pet.name + '</option>');
+                                + animal.id + '">'
+                                + animal.name + '</option>');
+
+
+                                console.log(animals.data);
                         });
                     },
                     error: function (ex) {
-                        alert('Failed to retrieve animals.' + ex.statusText);
+                        alert('Failed to retrieve animals.' + ex);
                     }
                 });
                 return false;
             })
         });
     </script>
+
+
+   
+
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ServiceTypeId").change(function() {
+                $("#DoctorId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDoctors")',
+                    dataType: 'json',
+                    data: { serviceTypeId: $("#ServiceTypeId").val() },
+                    success: function(doctors) {
+                        debugger;
+                        $("#DoctorId").append('<option value="0">(Select a doctor...)</option>');
+                        $.each(doctors, function(d, doctor) {
+                            $("#DoctorId").append(
+                                $('<option></option>')
+                                .text(doctor.name).val(doctor.id)
+                            );
+
+                            console.log(doctors.data);    
+                        });
+                        console.log(doctors.data);
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve doctors.' + ex.statusText);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ServiceTypeId").change(function() {
+                $("#RoomId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetRooms")',
+                    dataType: 'json',
+                    data: { serviceTypeId: $("#ServiceTypeId").val() },
+                    success: function(rooms) {
+                        $("#RoomId").append('<option value="0">(Select a room...)</option>');
+                        $.each(rooms, function(r, room) {
+                           
+                            debugger;
+                            
+                            $("#RoomId").append(
+                                $('<option></option>')
+                                .text(room.name).val(room.id)
+                            );
+                        });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve rooms.' + ex.statusText);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+   
 }

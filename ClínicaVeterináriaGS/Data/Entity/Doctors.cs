@@ -48,8 +48,8 @@ namespace VeterinaryClinicGS.Data.Entity
 
 
 
-        [Display(Name = "Full Name")]
-        public string FullName => $"{FirstName} {LastName}";
+        [Display(Name = "Name")]
+        public string Name => $"{FirstName} {LastName}";
 
         public string PhoneNumber { get; set; }
 
@@ -57,8 +57,8 @@ namespace VeterinaryClinicGS.Data.Entity
         public Guid ImageId { get; set; }
 
         public string ImageFullPath => ImageId == Guid.Empty
-         ? $"https://veterinaryclinicgsstorag.azurewebsites.net/foto/noimage.png"
-         : $"https://veterinaryclinicgsstorag.blob.core.windows.net/foto/{ImageId}";
+         ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"
+         : $"https://veterinaryclinicgs.blob.core.windows.net/foto/{ImageId}";
 
 
 

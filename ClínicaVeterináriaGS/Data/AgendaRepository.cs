@@ -85,39 +85,53 @@ namespace VeterinaryClinicGS.Data
 
             if (!_dataContext.Agendas.Any())
             {
-                initialDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 0, 0);
+                initialDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, (DateTime.Now.Hour + 2), 0, 0);
             }
             else
             {
                 var agenda = _dataContext.Agendas.OrderByDescending(o => o.Date).LastOrDefault();
-                initialDate = new DateTime(agenda.Date.Year, agenda.Date.Month, agenda.Date.AddDays(1).Day, 8, 0, 0);
+                initialDate = new DateTime(agenda.Date.Year, agenda.Date.Month, agenda.Date.AddDays(1).Day, 10, 0, 0);
             }
 
-            var finalDate = initialDate.AddDays(days);
-            while (initialDate < finalDate)
-            {
-                if (initialDate.DayOfWeek != DayOfWeek.Sunday)
+
+            var nRooms = _dataContext.Rooms.Count();
+            
+                var finalDate = initialDate.AddDays(days);
+                while (initialDate < finalDate)
                 {
-                    var finalDate2 = initialDate.AddHours(10);
-                    while (initialDate < finalDate2)
+                    if (initialDate.DayOfWeek != DayOfWeek.Sunday && initialDate.DayOfWeek != DayOfWeek.Saturday)
                     {
-                        _dataContext.Agendas.Add(new Agenda
-                        {
-                            Date = initialDate.ToUniversalTime(),
-                            IsAvailable = true
-                        });
 
-                        initialDate = initialDate.AddMinutes(30);
+                   
+                            
+                            var finalDate2 = initialDate.AddHours(12);
+                            while (initialDate < finalDate2 && initialDate.Hour >= 10 && initialDate.Hour <= 16 )
+                            {
+                                var room = 0;
+                                while (nRooms > room)
+                                {
+                                    _dataContext.Agendas.Add(new Agenda
+                                    {
+                                        Date = initialDate.ToUniversalTime(),
+                                        IsAvailable = true
+                                    });
+                                    room++;
+                                }
+                                
+                                initialDate = initialDate.AddMinutes(30);
+                            }
+
+                            initialDate = initialDate.AddHours(1);
+                       
+
+
                     }
-
-                    initialDate = initialDate.AddHours(14);
+                    else
+                    {
+                        initialDate = initialDate.AddDays(1);
+                    }
                 }
-                else
-                {
-                    initialDate = initialDate.AddDays(1);
-                }
-            }
-
+            
             await _dataContext.SaveChangesAsync();
         }
 

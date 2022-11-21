@@ -10,8 +10,8 @@ using VeterinaryClinicGS.Data;
 namespace VeterinaryClinicGS.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221113193555_112233")]
-    partial class _112233
+    [Migration("20221117191217_aaa")]
+    partial class aaa
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -245,9 +245,6 @@ namespace VeterinaryClinicGS.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Species")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -543,7 +540,7 @@ namespace VeterinaryClinicGS.Migrations
                         .HasForeignKey("OwnerId");
 
                     b.HasOne("VeterinaryClinicGS.Data.Entity.Rooms", "Room")
-                        .WithMany("Agendas")
+                        .WithMany()
                         .HasForeignKey("RoomId");
 
                     b.HasOne("VeterinaryClinicGS.Data.Entity.ServiceTypes", "ServiceType")
@@ -633,11 +630,6 @@ namespace VeterinaryClinicGS.Migrations
                     b.Navigation("Agendas");
 
                     b.Navigation("Animal");
-                });
-
-            modelBuilder.Entity("VeterinaryClinicGS.Data.Entity.Rooms", b =>
-                {
-                    b.Navigation("Agendas");
                 });
 #pragma warning restore 612, 618
         }

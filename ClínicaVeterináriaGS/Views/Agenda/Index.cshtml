@@ -31,6 +31,15 @@
                                 Animal
                             </th>
                             <th>
+                                Doctor
+                            </th>
+                            <th>
+                                Room
+                            </th>
+                            <th>
+                                Service
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.Remarks)
                             </th>
                             <th>
@@ -52,6 +61,16 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Animal.Name)
                                 </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Doctor.Name)
+                                </td>
+                                <td>
+                                     @Html.DisplayFor(modelItem => item.Room.RoomNumber)
+                                </td>
+                                <td>
+                                     @Html.DisplayFor(modelItem => item.ServiceType.Name)
+                                </td>
+                               
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Remarks)
                                 </td>

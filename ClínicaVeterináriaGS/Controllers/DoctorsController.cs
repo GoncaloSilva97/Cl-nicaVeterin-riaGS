@@ -117,7 +117,7 @@ namespace VeterinaryClinicGS.Controllers
 
                     var doctor = new Doctors
                     {
-                        Agendas = new List<Agenda>(),
+                        //Agendas = new List<Agenda>(),
                         ServiceType = doctorServiceType.ServiceType,
                         User = userInDB,
 
@@ -261,8 +261,8 @@ namespace VeterinaryClinicGS.Controllers
             {
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
                 {
-                    ViewBag.ErrorTitle = $"{doctor.User.FullName} provavelmente está a ser usado!!";
-                    ViewBag.ErrorMessage = $"{doctor.User.FullName} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
+                    ViewBag.ErrorTitle = $"{doctor.Name} provavelmente está a ser usado!!";
+                    ViewBag.ErrorMessage = $"{doctor.Name} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
                         $"Experimente primeiro apagar todas as encomendas que o estão a usar," +
                         $"e torne novamente a apagá-lo";
                 }

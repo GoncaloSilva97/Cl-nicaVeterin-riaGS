@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VeterinaryClinicGS.Migrations
 {
-    public partial class _112233 : Migration
+    public partial class aaa : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -270,7 +270,6 @@ namespace VeterinaryClinicGS.Migrations
                     ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Chip = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Species = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Race = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Born = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),

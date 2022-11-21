@@ -69,13 +69,13 @@ namespace VeterinaryClinicGS.Helperes
             return list;
         }
 
-        public IEnumerable<SelectListItem> GetComboAnimals(int ownerId)
+        public IEnumerable<SelectListItem> GetComboAnimals(int serviceTypeId)
         {
-            var list = _dataContext.Animals.Where(p => p.Owner.Id == ownerId).Select(p => new SelectListItem
+            var list = _dataContext.Animals.Where(p => p.Owner.Id == serviceTypeId).Select(p => new SelectListItem
             {
                 Text = p.Name,
                 Value = p.Id.ToString()
-            }).OrderBy(p => p.Text).ToList();
+            }).OrderBy(p => p.Value).ToList();
 
             list.Insert(0, new SelectListItem
             {
@@ -89,25 +89,11 @@ namespace VeterinaryClinicGS.Helperes
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public IEnumerable<SelectListItem> GetComboRooms()
+        public IEnumerable<SelectListItem> GetComboRooms(int serviceTypeId)
         {
-            var list = _dataContext.Rooms.Select(r => new SelectListItem
+            var list = _dataContext.Rooms.Where(r => r.ServiceType.Id == serviceTypeId).Select(r => new SelectListItem
             {
-                Text = "Numero",
+                Text = r.RoomNumber.ToString(),
                 Value = r.Id.ToString()
             }).OrderBy(r => r.Text).ToList();
 
@@ -120,11 +106,11 @@ namespace VeterinaryClinicGS.Helperes
             return list;
         }
 
-        public IEnumerable<SelectListItem> GetComboDoctor()
+        public IEnumerable<SelectListItem> GetComboDoctor(int doctorId)
         {
-            var list = _dataContext.Doctors.Select(d => new SelectListItem
+            var list = _dataContext.Doctors.Where(d => d.ServiceType.Id == doctorId).Select(d => new SelectListItem
             {
-                Text = d.User.FullName,
+                Text = d.Name,
                 Value = d.Id.ToString()
             }).OrderBy(d => d.Value).ToList();
 

@@ -19,13 +19,6 @@ namespace VeterinaryClinicGS.Data.Entity
         [Display(Name = "Chip")]
         public string Chip { get; set; }
 
-        [Display(Name = "Species")]
-        public string Species { get; set; }
-
-
-
-
-
 
         [MaxLength(50, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         public string Race { get; set; }
@@ -37,7 +30,6 @@ namespace VeterinaryClinicGS.Data.Entity
 
         public string Remarks { get; set; }
 
-        
 
         [Display(Name = "Born")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
@@ -47,27 +39,10 @@ namespace VeterinaryClinicGS.Data.Entity
 
         public Owners Owner { get; set; }
 
-       
-
         public ICollection<Agenda> Agendas { get; set; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public string ImageFullPath => ImageId == Guid.Empty
-           ? $"https://veterinaryclinicgsstorag.azurewebsites.net/foto/noimage.png"
-           : $"https://veterinaryclinicgsstorag.blob.core.windows.net/foto/{ImageId}";
+           ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"
+           : $"https://veterinaryclinicgs.blob.core.windows.net/foto/{ImageId}";
     }
 }
