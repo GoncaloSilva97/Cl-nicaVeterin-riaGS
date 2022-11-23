@@ -1,6 +1,87 @@
-﻿@{
-    ViewData["Title"] = "Schedule";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model IEnumerable<VeterinaryClinicGS.Data.Entity.Agenda>
 
-<p>Schedule hear</p>
+    @{
+    ViewData["Title"] = "Index";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+<br />
+
+
+
+<p>
+    <a asp-action="AddDays" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>Add Days</a>
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Agenda</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </th>
+                          
+                            <th>
+                                Room
+                            </th>
+                            <th>
+                                Service
+                            </th>
+                            
+                            <th>
+                                @Html.DisplayNameFor(model => model.IsAvailable)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+
+                            
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateLocal)
+                                </td>
+                               
+                                
+                                <td>
+                                     @Html.DisplayFor(modelItem => item.Room.RoomNumber)
+                                </td>
+                                <td>
+                                     @Html.DisplayFor(modelItem => item.ServiceType.Name)
+                                </td>
+                               
+                               
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsAvailable)
+                                </td>
+
+
+                                
+                               
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+}
+
+
+

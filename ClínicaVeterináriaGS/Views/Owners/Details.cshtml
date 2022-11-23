@@ -73,8 +73,23 @@
 
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-    <a asp-action="AddAnimal" asp-route-id="@Model.Id" class="btn btn-primary">Add Animal</a>
+    @if (!User.Identity.IsAuthenticated && User.IsInRole("Customer"))
+    {
+        <a asp-action="AddAnimal" asp-route-id="@Model.Id" class="btn btn-primary">Add Animal</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    }
+    
+     @if (User.Identity.IsAuthenticated && User.IsInRole("Worker"))
+    {
+        <a asp-action="AddAnimal" asp-route-id="@Model.Id" class="btn btn-primary">Add Animal</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    }
+
+
+
+
+
+    
     <a asp-action="Index" class="btn btn-success">Back to List</a>
 </div>
 <hr />
@@ -142,11 +157,30 @@ else
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Remarks)
                                     </td>
-                                    <td> 
-                                        <a asp-action="EditAnimal" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                                        <a asp-action="DetailsAnimal" class="btn btn-primary" asp-route-id="@item.Id">Animal Details<i class="glyphicon glyphicon-list"> </i> </a>
-                                        <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete<i class="glyphicon glyphicon-trash"></i></button>
-                                    </td>
+
+
+                                    
+                                    
+                                        <td> 
+                                        
+                                            <a asp-action="DetailsAnimal" class="btn btn-primary" asp-route-id="@item.Id">Animal Details<i class="glyphicon glyphicon-list"> </i> </a>
+                                            <a asp-action="EditAnimal" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                                            @if (!User.Identity.IsAuthenticated && User.IsInRole("Customer"))
+                                            {
+                                                
+                                                <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete<i class="glyphicon glyphicon-trash"></i></button>
+                                                
+                                            }
+                                            @if (User.Identity.IsAuthenticated && User.IsInRole("Worker"))
+                                            {
+                                                
+                                                <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete<i class="glyphicon glyphicon-trash"></i></button>
+                                                
+                                            }
+                                        </td>
+
+                                    
+                                    
                                 </tr>
                             }
                         </tbody>

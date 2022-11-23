@@ -13,7 +13,7 @@ using VeterinaryClinicGS.Models;
 
 namespace VeterinaryClinicGS.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class OwnersController : Controller
     {
 
@@ -25,7 +25,7 @@ namespace VeterinaryClinicGS.Controllers
         private readonly IBlobHelper _blobHelper;
         private readonly IOwnersRepository _ownersRepository;
         private readonly IAnimalsRepository _animalsRepository;
-
+        private readonly IMailHelper _mailHelper;
 
 
         public OwnersController(
@@ -36,10 +36,11 @@ namespace VeterinaryClinicGS.Controllers
             IConverterHelper converterHelper,
             IImageHelper imageHelper,
             IBlobHelper blobHelper,
+            IMailHelper mailHelper,
             IOwnersRepository ownersRepository,
             IAnimalsRepository animalsRepository)
         {
-
+            _mailHelper = mailHelper;
             _context = context;
             _userHelper = userHelper;
             _combosHelper = combosHelper;

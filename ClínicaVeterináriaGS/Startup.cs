@@ -8,12 +8,16 @@ using Microsoft.Extensions.Hosting;
 using VeterinaryClinicGS.Data;
 using VeterinaryClinicGS.Data.Entity;
 using VeterinaryClinicGS.Helperes;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 using System;
 using Microsoft.Extensions.Azure;
 using Azure.Storage.Queues;
 using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
+using VeterinaryClinicGS.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace VeterinaryClinicGS
 {
@@ -36,6 +40,8 @@ namespace VeterinaryClinicGS
 
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
+                //cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                //cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -44,7 +50,26 @@ namespace VeterinaryClinicGS
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequiredLength = 6;
             })
+                //.AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DataContext>();
+
+
+           //services.AddAuthentication()
+           //    .AddCookie()
+           //    .AddJwtBearer
+
+           //    (cfg =>
+           //     {
+           //         cfg.TokenValidationParameters = new TokenValidationParameters
+           //         {
+           //             ValidIssuer = this.Configuration["Tokens:Issuer"],
+           //             ValidAudience = this.Configuration["Tokens:Audience"],
+           //             IssuerSigningKey = new SymmetricSecurityKey(
+           //                 Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
+           //         };
+           //     });
+
+
 
 
             services.AddDbContext<DataContext>(cfg =>
@@ -82,6 +107,13 @@ namespace VeterinaryClinicGS
             
 
             services.AddScoped<IBlobHelper, BlobHelper>();
+
+
+            services.AddScoped<IMailHelper, MailHelper>();
+
+
+
+
 
             services.ConfigureApplicationCookie(options =>
             {

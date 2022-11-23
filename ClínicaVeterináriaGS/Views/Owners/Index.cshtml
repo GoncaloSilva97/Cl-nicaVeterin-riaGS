@@ -7,9 +7,15 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 <br />
 
-<p>
+
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
     <a asp-action="Create" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Create New</a>
 </p>
+
+}
+
 
 <div class="row">
     <div class="col-md-12">
@@ -83,15 +89,40 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Animal.Count)
                                 </td>
-                                <td>
+
+
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Customer"))
+                                {
+                                   
+                                    <td>
                                      <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>  
-                                </td>
-                                <td>
-                                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> 
-                                </td>
-                                <td>
-                                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                                </td>
+                                    </td>
+                                    <td>
+                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> 
+                                    </td> 
+
+                                }
+
+
+
+
+
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Worker"))
+                                {
+                                   <td>
+                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>  
+                                    </td>
+                                    <td>
+                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> 
+                                    </td>
+                                    <td>
+                                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                                    </td> 
+
+                                }
+                                
                             </tr>
                         }
                     </tbody>

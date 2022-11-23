@@ -93,7 +93,7 @@ namespace VeterinaryClinicGS.Helperes
         {
             var list = _dataContext.Rooms.Where(r => r.ServiceType.Id == serviceTypeId).Select(r => new SelectListItem
             {
-                Text = r.RoomNumber.ToString(),
+                Text =  r.RoomNumber.ToString(),
                 Value = r.Id.ToString()
             }).OrderBy(r => r.Text).ToList();
 

@@ -55,7 +55,11 @@
     </div>
 </div>
 <div>
-    <a asp-action="EditAnimal" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    @if (!User.Identity.IsAuthenticated && User.IsInRole("Customer"))
+    {
+        <a asp-action="EditAnimal" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    }
+    
     <a asp-action="Details" asp-route-id="@Model.Owner.Id" class="btn btn-success">Back to Owner</a>
 </div>
 
