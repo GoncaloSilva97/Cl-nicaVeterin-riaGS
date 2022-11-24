@@ -555,6 +555,9 @@ namespace VeterinaryClinicGS.Controllers
                     .Include(o => o.User)
                     .FirstOrDefaultAsync(o => o.Id == model.Id);
 
+
+
+
                 doctor.User.Document = model.Document;
                 doctor.User.FirstName = model.FirstName;
                 doctor.User.LastName = model.LastName;
@@ -562,6 +565,7 @@ namespace VeterinaryClinicGS.Controllers
                 doctor.User.PhoneNumber = model.PhoneNumber;
                 doctor.User.ImageId = imageId;
                 doctor.ServiceType = doctorServiceType.ServiceType;
+                doctor.ServiceTypeId = doctor.ServiceTypeId;
                 doctor.User = doctor.User;
                 
                 await _userHelper.UpdateUserAsync(doctor.User);
