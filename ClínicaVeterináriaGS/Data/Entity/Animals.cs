@@ -37,7 +37,7 @@ namespace VeterinaryClinicGS.Data.Entity
 
         public AnimalType AnimalType { get; set; }
 
-        public Owners Owner { get; set; }
+        public Owners Owner { get; set;}
 
         public ICollection<Agenda> Agendas { get; set; }
 
