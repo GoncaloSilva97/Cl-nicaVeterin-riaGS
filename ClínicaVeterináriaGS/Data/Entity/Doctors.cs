@@ -57,8 +57,8 @@ namespace VeterinaryClinicGS.Data.Entity
         public Guid ImageId { get; set; }
 
         public string ImageFullPath => ImageId == Guid.Empty
-         ? $"https://veterinaryclinicgs.azurewebsites.net/foto/noimage.png"
-         : $"https://veterinaryclinicgs.blob.core.windows.net/foto/{ImageId}";
+         ? $"https://veterinaryclinicgsblob.azurewebsites.net/foto/noimage.png"
+         : $"https://veterinaryclinicgsblob.blob.core.windows.net/foto/{ImageId}";
 
 
 
